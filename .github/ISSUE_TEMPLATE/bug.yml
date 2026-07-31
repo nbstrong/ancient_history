@@ -1,0 +1,80 @@
+name: Defect report
+description: Report a reproducible defect with exact environment and evidence.
+title: "[BUG] "
+body:
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: Describe the observed failure and the expected behavior.
+    validations:
+      required: true
+
+  - type: textarea
+    id: revision
+    attributes:
+      label: Tested revision and environment
+      description: Include commit SHA, Godot version, .NET version, operating system, server configuration, and database state.
+      placeholder: |
+        Commit SHA:
+        Godot version:
+        .NET version:
+        Operating system:
+        Server configuration:
+        Database state:
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Reproduction steps
+      description: Provide the shortest deterministic sequence that reproduces the failure.
+      placeholder: |
+        1. Start ...
+        2. Open ...
+        3. Perform ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: observed
+    attributes:
+      label: Observed result
+      description: State exactly what occurred, including errors, logs, state revisions, or visible artifacts.
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected result
+      description: State the exact result required by the governing issue, specification, or ADR.
+    validations:
+      required: true
+
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence
+      description: Attach or link logs, screenshots, video, traces, database queries, or test output.
+    validations:
+      required: true
+
+  - type: textarea
+    id: frequency
+    attributes:
+      label: Frequency and recovery
+      placeholder: |
+        Frequency: 5/5 attempts
+        Recovery: restart required / reconnect required / self-recovers / unknown
+    validations:
+      required: true
+
+  - type: textarea
+    id: impact
+    attributes:
+      label: Impact and suspected scope
+      description: Identify data corruption, duplication, desynchronization, crash, visual regression, performance degradation, or usability impact.
+    validations:
+      required: true

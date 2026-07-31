@@ -45,6 +45,7 @@ Trees, construction, crafting breadth, settlements, caves, advanced ecology, and
 - [`docs/feature-sprint-0-contracts.md`](docs/feature-sprint-0-contracts.md): delivery-semantics acceptance criteria.
 - [`docs/feature-step-1-terrain-core.md`](docs/feature-step-1-terrain-core.md): authoritative terrain specification.
 - [`docs/adr/`](docs/adr/): architecture decision records.
+- [`docs/development/`](docs/development/): delegated issue workflow, review process, evidence requirements, and human engine testing.
 - [`AGENTS.md`](AGENTS.md): ownership and execution rules.
 
 ## Development Bootstrap
@@ -63,5 +64,7 @@ The target developer workflow is:
 Until those commands exist, follow the current project files directly and treat machine-specific launch scripts as temporary.
 
 ## Contribution Rule
+
+Implementation work is issue-driven. Delegate only issues whose dependencies are complete and whose specification has passed the readiness checklist in `docs/development/`.
 
 Complete the current milestone's automated exit criteria before expanding scope. High-cost or irreversible technical changes require an Architecture Decision Record in `docs/adr/`.
