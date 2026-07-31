@@ -1,3 +1,29 @@
-# Godot 4+ specific ignores
+# Godot-generated project/editor data
 .godot/
+.import/
+.nomedia
+
+# Godot export and temporary files
+export.cfg
+export_credentials.cfg
+*.tmp
+*.translation
+
+# Mono/.NET generated data
+.mono/
+data_*/
+mono_crash.*.json
+
+# Local platform export directory
 /android/
+
+# .NET build and IDE outputs
+**/bin/
+**/obj/
+.vs/
+*.csproj.user
+*.suo
+
+# OS metadata
+.DS_Store
+Thumbs.db

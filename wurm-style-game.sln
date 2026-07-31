@@ -1,0 +1,33 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WurmStyleGame.Shared", "src/shared/WurmStyleGame.Shared.csproj", "{8C7F2B4A-CE87-4A9E-95CE-8A384AA1A740}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WurmStyleGame.Server", "src/server/WurmStyleGame.Server.csproj", "{7A9179A1-3788-4A89-8F7D-6B52CA68E4DE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WurmStyleGame.Tests", "tests/WurmStyleGame.Tests.csproj", "{DCA616EE-3761-46A7-85EA-69FB0CB30D04}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8C7F2B4A-CE87-4A9E-95CE-8A384AA1A740}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8C7F2B4A-CE87-4A9E-95CE-8A384AA1A740}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8C7F2B4A-CE87-4A9E-95CE-8A384AA1A740}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8C7F2B4A-CE87-4A9E-95CE-8A384AA1A740}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7A9179A1-3788-4A89-8F7D-6B52CA68E4DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A9179A1-3788-4A89-8F7D-6B52CA68E4DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A9179A1-3788-4A89-8F7D-6B52CA68E4DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A9179A1-3788-4A89-8F7D-6B52CA68E4DE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DCA616EE-3761-46A7-85EA-69FB0CB30D04}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DCA616EE-3761-46A7-85EA-69FB0CB30D04}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DCA616EE-3761-46A7-85EA-69FB0CB30D04}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DCA616EE-3761-46A7-85EA-69FB0CB30D04}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
