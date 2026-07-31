@@ -1,200 +1,129 @@
-# Delegated Development Workflow
+# Risk-Based Development Workflow
 
 ## Purpose
 
-This repository is designed for issue-driven implementation by delegated coding agents, followed by automated validation, browser-based review, and human testing in Godot when engine behavior is affected.
+This repository uses delegated coding agents and human review to ship working vertical slices quickly without weakening critical invariants. Process is proportional to risk. See [Development Process Principles](process-principles.md).
 
-An issue is an executable specification. An implementation agent applies decisions recorded in the issue, specifications, and accepted ADRs. It does not invent architecture during implementation.
+## Start With Reality
 
-## Delivery Gates
+Before specifying exact external-tool output, file formats, commands, or platform behavior, inspect the real supported environment when practical. Observed behavior is the starting evidence. Do not build a contract around guessed tool output.
 
-Every implementation passes three independent gates.
+## Risk Classification
 
-### 1. Specification ready
+Classify each change before deciding its process:
 
-An issue may receive work only when:
+- **Low risk:** documentation, local tooling, project metadata, scaffolding, mechanical refactors, and test-only changes.
+- **Medium risk:** ordinary gameplay, client, server, networking, or persistence features without new architecture or critical state invariants.
+- **High risk:** migrations, transactions, concurrency, recovery, idempotency, economy integrity, security, protocol compatibility, authoritative world state, or irreversible architecture.
 
-- Its objective is observable and limited to one primary outcome.
-- Dependencies are merged or explicitly available.
-- Required interfaces and constraints are specified.
-- Automated acceptance criteria are objectively testable.
-- Human validation is either specified or explicitly not required.
-- Stop conditions identify when the implementer must request clarification.
+When uncertain, choose the higher level only for the affected concern—not for the entire repository.
 
-### 2. Engineering ready
+## Planning and Issues
 
-A pull request may be approved only when:
+### Low risk
 
-- The linked issue is fully implemented.
-- The diff contains no unrelated work.
-- Required tests and failure cases pass.
-- Public interfaces and serialized contracts match governing documents.
-- Reviewer comments are resolved.
-- Human-test instructions are complete.
+A concise pull-request description may be sufficient. A separate issue is optional unless the work is part of milestone sequencing or has dependencies.
 
-### 3. Product verified
+State:
 
-An engine-affecting change may be merged only when a human has tested the exact proposed commit and recorded the result. A later code change invalidates affected human-test evidence.
+- The observable result.
+- Important constraints.
+- Focused validation.
 
-## Issue States
+### Medium risk
 
-Use these labels when available:
+Use an issue with objective, dependencies, relevant constraints, acceptance criteria, and human validation when applicable.
 
-- `status:planned`: ordered but not executable.
-- `status:ready`: all dependencies and specification requirements are satisfied.
-- `status:in-progress`: one implementation agent owns the task.
-- `status:review`: implementation and automated checks are complete.
-- `status:human-test`: code review passed and engine validation remains.
-- `status:blocked`: a named dependency or decision prevents progress.
+### High risk
 
-Suggested area labels:
+Use an issue with explicit invariants, failure semantics, compatibility/recovery expectations, and an ADR when a high-cost or irreversible decision is involved.
 
-- `area:client`
-- `area:server`
-- `area:protocol`
-- `area:persistence`
-- `area:networking`
-- `area:terrain`
-- `area:infrastructure`
-- `area:testing`
+Expected-file lists, exhaustive non-goals, stop conditions, and evidence plans are optional unless they materially reduce ambiguity or risk.
 
-Suggested risk labels:
+## Branches and Pull Requests
 
-- `risk:low`: mechanical change with narrow failure impact.
-- `risk:medium`: ordinary subsystem implementation.
-- `risk:high`: persistence, concurrency, recovery, protocol, security, or architecture-sensitive work.
+Use a descriptive branch name. Issue branches may use `issue-<number>-<short-description>`.
 
-Suggested agent-routing labels:
+A pull request should:
 
-- `agent:small`: mechanical and tightly constrained.
-- `agent:standard`: ordinary implementation with complete interfaces.
-- `agent:strong`: concurrency, persistence, protocol, or cross-boundary work.
+- Link an issue when one exists.
+- Explain what changed and why.
+- State the risk level.
+- Report focused validation with PASS/FAIL summaries.
+- Identify human testing still needed.
 
-## Issue Naming and Ordering
+Draft status is useful for incomplete or high-risk work but is not mandatory for a complete low-risk change.
 
-Implementation issue titles use:
-
-```text
-[M<milestone>-<sequence>] Imperative objective
-```
-
-Example:
-
-```text
-[M0-003] Create standalone executable world server
-```
-
-Every issue lists both `Blocked by` and `Blocks`. Only issues with merged dependencies receive `status:ready`.
-
-Issue numbers do not define architecture order. The milestone sequence and explicit dependencies do.
-
-## Issue Size
-
-A normal issue should have:
-
-- One observable result.
-- One pull request.
-- One primary subsystem.
-- Approximately one to five expected implementation files, excluding tests and generated metadata.
-- Tests in the same pull request.
-- No unresolved architecture decision.
-
-Split work when an issue combines independent concerns such as:
-
-- Schema design and networking.
-- Server behavior and Godot rendering.
-- Terrain math and persistence.
-- Outbox storage and publisher recovery.
-- Multiple gameplay actions.
-
-## Branch and Pull Request Rules
-
-Branch name:
-
-```text
-issue-<number>-<short-description>
-```
-
-Pull requests must:
-
-- Link one implementation issue with `Closes #<number>`.
-- Open as draft while implementation is incomplete.
-- Use the repository pull-request template.
-- Map requirements to code and evidence.
-- Explain all deviations and files outside the issue's expected-file list.
-- Mark ready only after automated criteria pass.
-
-Use squash merging so each issue becomes one coherent commit on the default branch.
+Use squash merge unless preserving separate commits has clear value.
 
 ## Implementation Agent Rules
 
 The implementation agent must:
 
-1. Work only from an issue marked ready.
-2. Read every governing specification and ADR named in the issue.
-3. Implement only the required scope.
-4. Add or update required tests.
-5. Preserve client/server authority boundaries.
-6. Record exact validation commands and results.
-7. Stop rather than improvise when a stop condition is met.
+1. Read the relevant issue and governing documents.
+2. Inspect real tools or interfaces before encoding exact assumptions when practical.
+3. Stay within the stated objective.
+4. Add tests proportional to the behavior and risk.
+5. Report validation accurately.
+6. Stop when an unresolved architecture decision, incompatible dependency, or material scope expansion is required.
 
-The implementation agent must not:
+The agent may make ordinary implementation choices that do not change architecture or public contracts. It should not stop for minor unspecified details that can be resolved safely from repository conventions.
 
-- Introduce a new architecture pattern without an accepted ADR.
-- Add a dependency that the issue does not permit.
-- Weaken an acceptance criterion to make a test pass.
-- Claim human validation.
-- Bundle cleanup or unrelated refactors into the task.
+Do not bundle unrelated work, but allow small cleanup that is necessary to complete or test the objective.
 
 ## Review Rules
 
-The reviewer evaluates the pull request against:
+Reviewers first ask whether the supported workflow works and required invariants hold.
 
-1. The linked issue.
-2. Accepted ADRs.
-3. Governing feature specifications.
-4. Repository invariants.
-5. Automated and human evidence requirements.
+A **blocking defect** is a realistic material problem such as:
 
-The reviewer distinguishes:
+- A missing required outcome.
+- A supported workflow that fails.
+- Data loss, corruption, duplication, or recovery failure.
+- A security or authority violation.
+- An incompatible public or serialized contract.
+- Unapproved architecture or dangerous scope expansion.
+- A required test that is absent for a material risk.
 
-- **Blocking defect:** correctness, missing requirement, unsafe authority boundary, durability failure, missing required test, incompatible contract, or unapproved scope expansion.
-- **Follow-up improvement:** valuable work not required for safe completion of the issue.
+Everything else is a follow-up improvement unless the issue explicitly makes it required.
 
-A defective issue specification should be amended or replaced. The reviewer should not silently redesign the subsystem through ad hoc review comments.
+Reviewers should:
+
+- Prioritize concrete failures over hypothetical edge cases.
+- Verify requested fixes without restarting the entire review unless new risk was introduced.
+- Avoid demanding mathematical equivalence across platforms when supported behavior is equivalent.
+- Amend a defective specification once using observed evidence rather than redesigning through repeated comments.
+- Stop expanding test matrices once the supported workflow and stated invariants are adequately proven.
+
+## Validation and Evidence
+
+Evidence is proportional:
+
+- Prefer commands plus concise PASS/FAIL summaries.
+- Include full logs only for failures, performance claims, recovery behavior, or high-risk invariants.
+- Do not require exhaustive requirement-to-file mapping for low-risk work.
+- Record unavailable validation honestly without blocking unrelated validated behavior.
 
 ## Human Godot Testing
 
-Human engine testing is required for changes affecting:
+Human engine testing is required when automated checks cannot adequately prove affected visible, interactive, import, export, graphics, input, audio, connection, or runtime behavior.
 
-- Godot startup or project import.
-- Scenes, nodes, resources, meshes, shaders, animation, input, camera, audio, or UI.
-- Client connection and reconnect behavior.
-- Player interaction and visible world state.
-- Client-side application of snapshots or deltas.
-- Export or runtime behavior in supported environments.
+Use a focused procedure covering only affected behavior. Screenshots or video are required only when they prove a visual or interactive acceptance criterion.
 
-Backend-only tasks may state that human engine testing is not required, but the issue and PR must explain why.
-
-Use `docs/development/human-test-report.md`. The report must include the tested commit SHA, Godot version, operating system, configuration, procedure, result, and evidence.
+Human evidence remains valid after later commits that cannot affect the tested behavior. Documentation-only, test-only, and unrelated metadata changes do not automatically require repeating editor validation.
 
 ## Merge Rules
 
-A pull request is mergeable only when:
+Merge when:
 
-- All required automated checks pass. Before CI exists, the pull request must record successful issue-specific validation.
-- Required review is approved.
-- All blocking comments are resolved.
-- Human validation passes when required.
-- The tested commit matches the proposed head commit.
-- The branch is current enough to merge without invalidating test assumptions.
+- The objective is met.
+- Required automated checks for the affected behavior pass.
+- No material blocker remains.
+- Required human validation passes.
+- Any unapproved architecture change has been removed or recorded in an ADR.
 
-## Planning Depth
+A linked issue, draft phase, exact-head screenshot, exhaustive risk review, and full test transcript are not universal merge requirements.
 
-Maintain planning at these levels:
+## Delivery Bias
 
-- Current milestone: fully specified executable issues.
-- Next milestone: fully specified before current milestone completion.
-- Later milestones: ordered issue shells or epics, not ready for implementation.
-
-This avoids implementing distant features against interfaces that have not yet been proven by the first end-to-end vertical slice.
+Prefer a working vertical slice and follow-up issues over indefinitely hardening a small change. Reserve exhaustive review for failures that could corrupt persistent state, violate authority, break compatibility, lose player data, or create serious security risk.
