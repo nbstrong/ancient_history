@@ -1,6 +1,6 @@
 # Ancient History
 
-Ancient History is an early-stage persistent medieval sandbox MMO project inspired by Wurm-style terrain modification, physical resource processing, gradual construction, and player-driven settlement life.
+Ancient History is an early-stage persistent sandbox MMO set around 0 AD, inspired by Wurm-style terrain modification, physical resource processing, gradual construction, and player-driven settlement life.
 
 ## Project Status
 
