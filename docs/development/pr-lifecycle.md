@@ -2,58 +2,60 @@
 
 ## 1. Start
 
-- Select an issue whose dependencies are merged and whose specification is ready.
-- Create branch `issue-<number>-<short-description>` from the current default branch.
-- Open a draft pull request using the repository template.
-- Link the issue with `Closes #<number>`.
+- Choose an observable objective.
+- Classify the affected risk.
+- Use an issue for medium/high-risk work, milestone dependencies, or when coordination benefits from one.
+- Low-risk work may begin from a concise pull request.
+- Create a descriptive branch.
+
+Draft status is optional. Use it when implementation or validation is still incomplete.
 
 ## 2. Implement
 
-- Limit changes to the issue scope.
-- Add tests in the same pull request.
-- Update documentation required by the issue.
-- Record deviations immediately rather than hiding them in the final diff.
-- Stop when an issue stop condition is met.
+- Keep the change focused on the objective.
+- Make ordinary implementation decisions from repository conventions.
+- Add tests proportional to the affected behavior and risk.
+- Stop only for unresolved architecture, incompatible dependencies, public-contract changes, or significant scope expansion.
 
-## 3. Automated Validation
+## 3. Validate
 
-- Run all issue-required commands.
-- Run the repository CI-equivalent command when it exists.
-- Record commands and results in the pull request.
-- Do not mark ready while required checks fail or are absent.
+- Run focused checks for the changed behavior.
+- Run broader tests when the risk or shared surface justifies them.
+- Record concise PASS/FAIL results.
+- Report unavailable validation honestly.
 
-## 4. Browser Review
+## 4. Review
 
-- Mark the pull request ready.
-- Review against the linked issue, accepted ADRs, feature specifications, and repository invariants.
-- Resolve every blocking defect.
-- Re-run affected tests after changes.
+- Review the supported workflow and affected invariants first.
+- Block only on material correctness, durability, compatibility, authority, security, architecture, or required-test failures.
+- Record nonessential hardening as follow-up work.
+- After fixes, verify the requested fixes and affected areas rather than restarting the entire review without new risk.
 
-## 5. Human Engine Validation
+## 5. Human Validation
 
-When required:
+When automated checks cannot adequately prove affected Godot or runtime behavior:
 
-- Test the exact pull-request head commit.
-- Use the pinned Godot version and documented environment.
-- Complete `docs/development/human-test-report.md`.
-- File separate defect issues for failures.
-- Retest after any later commit that can affect the tested behavior.
+- Run a focused human procedure in the supported environment.
+- Record the behavior and result.
+- Attach screenshots or video only when they prove the acceptance criterion.
+- Retest after later commits only when they can affect the tested behavior.
 
 ## 6. Merge
 
-Merge only when:
+Merge when:
 
-- Automated checks pass.
-- Browser review approves.
-- Human validation passes when required.
-- The issue definition of done is complete.
-- The branch remains mergeable.
+- The objective works.
+- Required checks for the affected risk pass.
+- No material blocker remains.
+- Required human validation passes.
+- Architecture changes are approved.
 
-Use squash merge. The squash commit should identify the issue and the observable result.
+Use squash merge by default. Preserve separate commits only when that history has clear value.
 
 ## 7. Closeout
 
-- Confirm the issue closed automatically.
-- Update the milestone tracking issue.
-- Unblock only the next issues whose dependencies are now complete.
-- Preserve evidence links in the pull request and issue history.
+- Confirm linked issues close when applicable.
+- Unblock dependent work.
+- Create follow-up issues only for improvements worth scheduling.
+
+Do not delay completion to exhaustively harden unsupported edge cases or produce redundant evidence.
