@@ -1,183 +1,102 @@
 name: Implementation task
-description: Define one agent-executable implementation task with objective acceptance criteria.
+description: Define a focused implementation outcome with detail proportional to risk.
 title: "[M?-???] "
 body:
   - type: markdown
     attributes:
       value: |
-        Use this form for implementation work. The issue must describe decisions, not delegate architecture decisions to the implementer.
+        Use this form when a separate issue is useful. Low-risk documentation, tooling, metadata, scaffolding, mechanical refactors, and test-only fixes may use a concise pull request without a full issue.
 
   - type: textarea
     id: objective
     attributes:
       label: Objective
-      description: State one observable result in one or two sentences.
-      placeholder: Add an executable world-server host that starts, reports healthy, and shuts down gracefully.
+      description: State the observable result in one or two sentences.
+      placeholder: Add an executable world-server host that starts, reports healthy, and shuts down cleanly.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: risk
+    attributes:
+      label: Risk level
+      description: Choose the highest risk actually affected by this change.
+      options:
+        - Low — docs, tooling, metadata, scaffolding, mechanical or test-only change
+        - Medium — ordinary feature or subsystem work
+        - High — persistence, concurrency, recovery, protocol, security, authority, economy, or architecture
     validations:
       required: true
 
   - type: textarea
-    id: background
+    id: context
     attributes:
-      label: Background and governing documents
-      description: Explain why the work exists and link the relevant specifications or ADRs.
+      label: Relevant context and constraints
+      description: Link governing documents and state only constraints that materially affect implementation. Write None when unnecessary.
       placeholder: |
-        Governed by:
-        - docs/architecture.md
-        - docs/adr/0001-standalone-dotnet-server.md
+        Governed by docs/architecture.md.
+        Preserve the standalone server boundary.
     validations:
-      required: true
+      required: false
 
   - type: textarea
     id: dependencies
     attributes:
       label: Dependencies
-      description: List blocking issues and work blocked by this issue. Write None when there are no dependencies.
-      placeholder: |
-        Blocked by:
-        - #123
-
-        Blocks:
-        - #125
+      description: List blocking work or write None. Optional for independent low-risk changes.
+      placeholder: None
     validations:
-      required: true
+      required: false
 
   - type: textarea
-    id: required_changes
+    id: behavior
     attributes:
-      label: Required changes
-      description: Specify exact behavior, APIs, files, schemas, scenes, commands, and error handling.
+      label: Required behavior or invariants
+      description: Describe important behavior, interfaces, failure semantics, or invariants. Leave implementation choices open unless compatibility or safety requires precision.
       placeholder: |
-        1. Change `src/server/WurmStyleGame.Server.csproj` to an executable project.
-        2. Add `Program.cs` using the generic host.
-        3. Add `/health/live` and `/health/ready` endpoints.
-        4. Handle SIGINT and SIGTERM without abandoning queued writes.
+        - Starts as a standalone .NET process.
+        - Reports readiness after required dependencies initialize.
+        - Shuts down without abandoning committed writes.
     validations:
-      required: true
+      required: false
 
   - type: textarea
-    id: expected_files
+    id: acceptance
     attributes:
-      label: Expected files
-      description: List expected files. Changes outside this list require an explanation in the PR.
+      label: Acceptance criteria
+      description: Use a small set of observable checks covering success and realistic material failures.
       placeholder: |
-        - src/server/Program.cs
-        - src/server/WurmStyleGame.Server.csproj
-        - tests/Integration/ServerHostTests.cs
-    validations:
-      required: true
-
-  - type: textarea
-    id: interfaces
-    attributes:
-      label: Required interfaces and data contracts
-      description: Provide exact signatures, serialized fields, table columns, constraints, scene-node contracts, or write None.
-      placeholder: |
-        `GET /health/live` returns HTTP 200 when the process event loop is running.
-        `GET /health/ready` returns HTTP 200 only after required dependencies are ready.
-    validations:
-      required: true
-
-  - type: textarea
-    id: constraints
-    attributes:
-      label: Implementation constraints
-      description: Record mandatory patterns, approved dependencies, compatibility rules, concurrency rules, and prohibited shortcuts.
-      placeholder: |
-        - Do not add gameplay logic to the host.
-        - Use structured logging.
-        - Do not add a Godot dependency to the server project.
-    validations:
-      required: true
-
-  - type: textarea
-    id: non_goals
-    attributes:
-      label: Non-goals
-      description: State explicitly excluded behavior.
-      placeholder: |
-        - Authentication
-        - Gameplay commands
-        - Database migrations
-    validations:
-      required: true
-
-  - type: textarea
-    id: automated_acceptance
-    attributes:
-      label: Automated acceptance criteria
-      description: Use checkboxes. Every criterion must be objectively testable.
-      placeholder: |
-        - [ ] `dotnet build` succeeds with no warnings.
-        - [ ] Host startup integration test passes.
-        - [ ] Graceful-shutdown integration test passes.
-        - [ ] Existing tests pass.
+        - [ ] `dotnet build` succeeds.
+        - [ ] Startup and graceful-shutdown tests pass.
+        - [ ] The process reports healthy in the supported local environment.
     validations:
       required: true
 
   - type: dropdown
     id: human_required
     attributes:
-      label: Human engine validation required
+      label: Human validation required
+      description: Select Yes only when automated checks cannot adequately prove affected visible, interactive, import, export, or runtime behavior.
       options:
-        - "Yes"
         - "No"
+        - "Yes"
     validations:
       required: true
 
   - type: textarea
     id: human_validation
     attributes:
-      label: Human engine validation procedure
-      description: Give exact prerequisites, actions, expected observations, and regressions. When not required, explain why.
-      placeholder: |
-        Prerequisites:
-        1. Godot version ...
-
-        Procedure:
-        1. Open ...
-        2. Run ...
-
-        Expected results:
-        - ...
+      label: Human validation
+      description: When required, state the action and expected observation. Request screenshots or video only when they prove the criterion.
+      placeholder: Open the project, perform the affected interaction, and confirm the expected visible result.
     validations:
-      required: true
-
-  - type: textarea
-    id: evidence
-    attributes:
-      label: Evidence required
-      description: State what CI output, logs, screenshots, video, or test report the PR must include.
-      placeholder: |
-        - CI link
-        - Test command and result
-        - Human test report tied to the tested commit SHA
-    validations:
-      required: true
+      required: false
 
   - type: textarea
     id: stop_conditions
     attributes:
-      label: Stop conditions
-      description: State when the implementation agent must stop and request issue clarification rather than improvise.
-      placeholder: |
-        Stop when:
-        - A required interface conflicts with an accepted ADR.
-        - A new runtime dependency appears necessary.
-        - The task cannot be completed without expanding scope.
+      label: Material stop conditions
+      description: Optional. Include only unresolved architecture, dependency, contract, or significant scope-expansion conditions.
+      placeholder: Stop if the change requires a new runtime dependency or changes the public protocol.
     validations:
-      required: true
-
-  - type: textarea
-    id: done
-    attributes:
-      label: Definition of done
-      value: |
-        - [ ] Required implementation is complete.
-        - [ ] Automated acceptance criteria pass.
-        - [ ] PR maps each change to this issue.
-        - [ ] Reviewer found no blocking defects.
-        - [ ] Human validation passed, or the issue explains why it is not required.
-        - [ ] Documentation is updated.
-    validations:
-      required: true
+      required: false
