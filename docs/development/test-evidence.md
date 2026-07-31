@@ -1,27 +1,32 @@
 # Test Evidence Requirements
 
+Evidence should make the result trustworthy without turning the pull request into a transcript archive.
+
 ## Automated Evidence
 
-Every implementation pull request records:
+For low- and medium-risk changes, record:
 
-- Exact validation commands.
-- Exit results.
-- Relevant test names.
-- CI run link when available.
-- Failure-injection or concurrency-test configuration when applicable.
+- The focused commands or checks performed.
+- A concise PASS/FAIL result.
+- Any unavailable validation that matters.
 
-Do not use screenshots of terminal output when copyable text or CI logs are available.
+Include detailed output only when it explains a failure, performance claim, recovery result, or high-risk invariant.
+
+For high-risk persistence, concurrency, recovery, protocol, security, authority, or economy work, also record the configuration and evidence needed to understand the affected invariant.
+
+CI links are useful when available but are not additional paperwork requirements when the result is already clear.
 
 ## Human Evidence
 
-Engine-affecting pull requests include:
+Record:
 
-- Tested commit SHA.
-- Godot version and operating system.
-- Exact procedure.
-- Pass or fail result.
-- Screenshots for visible static state.
-- Video for interaction, timing, reconnect, animation, or multi-client behavior.
-- Logs for state revisions, server decisions, and recovery.
+- The supported environment.
+- The affected behavior tested.
+- Pass or fail.
+- Relevant observations or defects.
 
-Evidence must demonstrate the issue acceptance criteria rather than only showing that the project launched.
+Include the commit or branch state when behavior-sensitive changes are still occurring. A later commit invalidates human evidence only when it can affect the tested behavior.
+
+Use screenshots for visible static results and video for interaction or timing only when those artifacts prove an acceptance criterion. A successful command result may be better evidence for toolchain, import, build, or headless behavior.
+
+Do not require terminal screenshots when copyable output is available.
