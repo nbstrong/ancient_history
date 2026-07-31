@@ -32,15 +32,22 @@ assert_rejects() {
   fi
 }
 
-assert_normalizes '4.7.1.stable' '4.7.1.stable'
-assert_normalizes '4.7.1.stable.official.abc123def' '4.7.1.stable'
-assert_rejects '4.7.0.stable'
-assert_rejects '4.7.2.stable'
-assert_rejects '4.8.0.stable'
-assert_rejects '4.7.1.beta1'
-assert_rejects '4.7.1.stable.official.ab-bad'
-assert_rejects '4.7.1.stable.official.ab_bad'
-assert_rejects '4.7.1.stable.official.ab.bad'
+assert_normalizes '4.7.1.stable.mono.double.official' '4.7.1.stable.mono.double.official'
+assert_normalizes '4.7.1.stable.mono.double.official.a13da4feb' '4.7.1.stable.mono.double.official'
+assert_normalizes '4.7.1.stable.mono.double.custom_build' '4.7.1.stable.mono.double.custom_build'
+assert_normalizes '4.7.1.stable.mono.double.custom_build.a13da4feb' '4.7.1.stable.mono.double.custom_build'
+assert_rejects '4.7.1.stable'
+assert_rejects '4.7.1.stable.official.a13da4feb'
+assert_rejects '4.7.1.stable.mono.official.a13da4feb'
+assert_rejects '4.7.1.stable.double.custom_build.a13da4feb'
+assert_rejects '4.7.1.stable.mono.double.custom_build.'
+assert_rejects '4.7.1.stable.mono.double.custom_build.ab-bad'
+assert_rejects '4.7.1.stable.mono.double.custom_build.ab_bad'
+assert_rejects '4.7.1.stable.mono.double.custom_build.ab.bad'
+assert_rejects '4.7.0.stable.mono.double.custom_build.a13da4feb'
+assert_rejects '4.7.2.stable.mono.double.custom_build.a13da4feb'
+assert_rejects '4.8.0.stable.mono.double.custom_build.a13da4feb'
+assert_rejects '4.7.1.beta1.mono.double.custom_build.a13da4feb'
 
 if GODOT_BIN="${TEMP_DIR}/missing-godot" resolve_godot_bin >/dev/null 2>&1; then
   fail 'missing GODOT_BIN fails deterministically'
@@ -77,7 +84,7 @@ printf '%s\n' '#!/usr/bin/env bash' 'if [[ "$1" == "--version" ]]; then echo 10.
 chmod +x "${MOCK_BIN_DIR}/dotnet"
 
 PATH_GODOT_MONO="${MOCK_BIN_DIR}/godot4-mono"
-write_mock_godot "${PATH_GODOT_MONO}" '4.7.1.stable' 0 "${TEMP_DIR}/path-mono.log"
+write_mock_godot "${PATH_GODOT_MONO}" '4.7.1.stable.mono.double.custom_build.a13da4feb' 0 "${TEMP_DIR}/path-mono.log"
 if path_result="$(PATH="${MOCK_BIN_DIR}:/usr/bin:/bin" env -u GODOT_BIN bash -c 'source "$1/tools/toolchain.sh"; resolve_godot_bin' bash "${ROOT}")" && [[ "${path_result}" == "${PATH_GODOT_MONO}" ]]; then
   pass 'PATH lookup selects a supported Godot command'
 else
@@ -86,7 +93,7 @@ fi
 
 STANDARD_LOG="${TEMP_DIR}/standard.log"
 STANDARD_GODOT="${TEMP_DIR}/standard-godot"
-write_mock_godot "${STANDARD_GODOT}" '4.7.1.stable' 0 "${STANDARD_LOG}" 'standard editor help without .NET options'
+write_mock_godot "${STANDARD_GODOT}" '4.7.1.stable.mono.double.custom_build.a13da4feb' 0 "${STANDARD_LOG}" 'standard editor help without .NET options'
 if PATH="${MOCK_BIN_DIR}:${PATH}" GODOT_BIN="${STANDARD_GODOT}" "${ROOT}/tools/verify-toolchain.sh" >/dev/null 2>&1; then
   fail 'standard non-.NET editor is rejected when it silently ignores --build-solutions'
 else
@@ -101,7 +108,7 @@ fi
 
 UNSUPPORTED_LOG="${TEMP_DIR}/unsupported.log"
 UNSUPPORTED_GODOT="${TEMP_DIR}/unsupported-godot"
-write_mock_godot "${UNSUPPORTED_GODOT}" '4.7.1.stable' 1 "${UNSUPPORTED_LOG}"
+write_mock_godot "${UNSUPPORTED_GODOT}" '4.7.1.stable.mono.double.custom_build.a13da4feb' 1 "${UNSUPPORTED_LOG}"
 if PATH="${MOCK_BIN_DIR}:${PATH}" GODOT_BIN="${UNSUPPORTED_GODOT}" "${ROOT}/tools/verify-toolchain.sh" >/dev/null 2>&1; then
   fail 'unsupported Godot executable fails headless verification'
 else
@@ -110,11 +117,11 @@ fi
 
 GOOD_LOG="${TEMP_DIR}/good.log"
 GOOD_GODOT="${TEMP_DIR}/good-godot"
-write_mock_godot "${GOOD_GODOT}" '4.7.1.stable.official.abc123' 0 "${GOOD_LOG}"
+write_mock_godot "${GOOD_GODOT}" '4.7.1.stable.mono.double.custom_build.a13da4feb' 0 "${GOOD_LOG}"
 PATH_GODOT="${MOCK_BIN_DIR}/godot"
 write_mock_godot "${PATH_GODOT}" '4.7.0.stable' 0 "${TEMP_DIR}/path.log"
 if output="$(PATH="${MOCK_BIN_DIR}:${PATH}" GODOT_BIN="${GOOD_GODOT}" "${ROOT}/tools/verify-toolchain.sh" 2>&1)"; then
-  if [[ "${output}" == *'godot: 4.7.1.stable'* ]] && grep -q -- '--headless' "${GOOD_LOG}"; then
+  if [[ "${output}" == *'godot: 4.7.1.stable.mono.double.custom_build'* ]] && grep -q -- '--headless' "${GOOD_LOG}"; then
     pass 'GODOT_BIN override is selected and verified'
   else
     fail 'GODOT_BIN override is selected and verified'

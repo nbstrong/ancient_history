@@ -22,15 +22,22 @@ function Assert-Rejects([string] $Input) {
     } catch { Pass "rejects $Input" }
 }
 
-Assert-Normalizes '4.7.1.stable' '4.7.1.stable'
-Assert-Normalizes '4.7.1.stable.official.abc123def' '4.7.1.stable'
-Assert-Rejects '4.7.0.stable'
-Assert-Rejects '4.7.2.stable'
-Assert-Rejects '4.8.0.stable'
-Assert-Rejects '4.7.1.beta1'
-Assert-Rejects '4.7.1.stable.official.ab-bad'
-Assert-Rejects '4.7.1.stable.official.ab_bad'
-Assert-Rejects '4.7.1.stable.official.ab.bad'
+Assert-Normalizes '4.7.1.stable.mono.double.official' '4.7.1.stable.mono.double.official'
+Assert-Normalizes '4.7.1.stable.mono.double.official.a13da4feb' '4.7.1.stable.mono.double.official'
+Assert-Normalizes '4.7.1.stable.mono.double.custom_build' '4.7.1.stable.mono.double.custom_build'
+Assert-Normalizes '4.7.1.stable.mono.double.custom_build.a13da4feb' '4.7.1.stable.mono.double.custom_build'
+Assert-Rejects '4.7.1.stable'
+Assert-Rejects '4.7.1.stable.official.a13da4feb'
+Assert-Rejects '4.7.1.stable.mono.official.a13da4feb'
+Assert-Rejects '4.7.1.stable.double.custom_build.a13da4feb'
+Assert-Rejects '4.7.1.stable.mono.double.custom_build.'
+Assert-Rejects '4.7.1.stable.mono.double.custom_build.ab-bad'
+Assert-Rejects '4.7.1.stable.mono.double.custom_build.ab_bad'
+Assert-Rejects '4.7.1.stable.mono.double.custom_build.ab.bad'
+Assert-Rejects '4.7.0.stable.mono.double.custom_build.a13da4feb'
+Assert-Rejects '4.7.2.stable.mono.double.custom_build.a13da4feb'
+Assert-Rejects '4.8.0.stable.mono.double.custom_build.a13da4feb'
+Assert-Rejects '4.7.1.beta1.mono.double.custom_build.a13da4feb'
 
 $missing = Join-Path ([IO.Path]::GetTempPath()) 'ancient-history-missing-godot.exe'
 $oldOverride = $env:GODOT_BIN
@@ -46,20 +53,20 @@ New-Item -ItemType Directory -Path $temp | Out-Null
 try {
     $good = Join-Path $temp 'good-godot.cmd'
     $launchLog = Join-Path $temp 'launcher.log'
-    Set-Content -LiteralPath $good -Encoding ASCII -Value @('@echo off', 'if "%~1"=="--version" (echo 4.7.1.stable.official.abc123 & exit /b 0)', 'if "%~1"=="--help" (echo --build-solutions & exit /b 0)', "echo %*>>`"$launchLog`"", 'if "%~1"=="--headless" exit /b 1', 'exit /b 0')
+    Set-Content -LiteralPath $good -Encoding ASCII -Value @('@echo off', 'if "%~1"=="--version" (echo 4.7.1.stable.mono.double.custom_build.a13da4feb & exit /b 0)', 'if "%~1"=="--help" (echo --build-solutions & exit /b 0)', "echo %*>>`"$launchLog`"", 'if "%~1"=="--headless" exit /b 1', 'exit /b 0')
     $oldOverride = $env:GODOT_BIN
     try {
         $env:GODOT_BIN = $good
         $resolved = Resolve-GodotBin
         if ($resolved -eq (Resolve-Path -LiteralPath $good).Path) { Pass 'GODOT_BIN override is selected' } else { Fail 'GODOT_BIN override is selected' }
-        if ((Get-GodotVersion -GodotBin $resolved) -eq '4.7.1.stable') { Pass 'PowerShell normalizes official Godot output' } else { Fail 'PowerShell normalizes official Godot output' }
+        if ((Get-GodotVersion -GodotBin $resolved) -eq '4.7.1.stable.mono.double.custom_build') { Pass 'PowerShell normalizes custom Godot output' } else { Fail 'PowerShell normalizes custom Godot output' }
         try { Invoke-GodotHeadlessBuild -GodotBin $resolved -ProjectDir $root; Fail 'unsupported Godot executable fails headless verification' } catch { Pass 'unsupported Godot executable fails headless verification' }
         & (Join-Path $root 'open_godot.ps1') '--test-argument' | Out-Null
         $launchOutput = Get-Content -LiteralPath $launchLog -Raw
         if ($launchOutput.Contains('--editor') -and $launchOutput.Contains('--test-argument')) { Pass 'PowerShell launcher opens the override executable' } else { Fail 'PowerShell launcher opens the override executable' }
 
         $standard = Join-Path $temp 'standard-godot.cmd'
-        Set-Content -LiteralPath $standard -Encoding ASCII -Value @('@echo off', 'if "%~1"=="--version" (echo 4.7.1.stable & exit /b 0)', 'if "%~1"=="--help" (echo standard editor help without .NET options & exit /b 0)', 'exit /b 0')
+        Set-Content -LiteralPath $standard -Encoding ASCII -Value @('@echo off', 'if "%~1"=="--version" (echo 4.7.1.stable.mono.double.custom_build.a13da4feb & exit /b 0)', 'if "%~1"=="--help" (echo standard editor help without .NET options & exit /b 0)', 'exit /b 0')
         try { Invoke-GodotHeadlessBuild -GodotBin $standard -ProjectDir $root; Fail 'standard non-.NET editor is rejected when it silently ignores --build-solutions' } catch { Pass 'standard non-.NET editor is rejected when it silently ignores --build-solutions' }
     } finally {
         $env:GODOT_BIN = $oldOverride

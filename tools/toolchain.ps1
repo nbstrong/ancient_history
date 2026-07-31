@@ -25,10 +25,11 @@ function Normalize-GodotVersion {
 
     $expected = Get-ExpectedGodotVersion
     $normalized = $RawVersion.Trim()
-    $pattern = '^' + [regex]::Escape($expected) + '(?:\.official(?:\.[A-Za-z0-9]+)?)?$'
+    $pattern = '^' + [regex]::Escape($expected) + '\.(official|custom_build)(?:\.[A-Za-z0-9]+)?$'
 
-    if ($normalized -match $pattern) {
-        return $expected
+    $match = [regex]::Match($normalized, $pattern)
+    if ($match.Success) {
+        return "$expected.$($match.Groups[1].Value)"
     }
     throw "Unsupported Godot version: $RawVersion"
 }

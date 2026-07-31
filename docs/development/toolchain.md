@@ -3,8 +3,12 @@
 The repository uses one pinned development toolchain:
 
 - .NET SDK `10.0.302`, selected by the root `global.json`.
-- Godot `4.7.1-stable` .NET editor. Official build/hash suffixes such as
-  `4.7.1.stable.official.<hash>` are accepted.
+- Godot `4.7.1-stable` .NET double-precision editor. Accepted complete forms
+  are `4.7.1.stable.mono.double.official`,
+  `4.7.1.stable.mono.double.official.<hash>`,
+  `4.7.1.stable.mono.double.custom_build`, and
+  `4.7.1.stable.mono.double.custom_build.<hash>`, where `<hash>` is nonempty
+  and alphanumeric.
 - Godot project features: `4.7`, `Double Precision`, and `Forward Plus`.
 
 ## Supported development environments
@@ -56,7 +60,7 @@ dotnet --version
 ```
 
 Verification requires `dotnet --version` to print `10.0.302`, Godot to report
-the normalized prefix `4.7.1.stable`, expose the .NET-only
+the normalized release `4.7.1.stable.mono.double.<provenance>`, expose the .NET-only
 `--build-solutions` help option, and complete:
 
 ```text

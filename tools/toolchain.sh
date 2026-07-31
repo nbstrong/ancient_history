@@ -14,23 +14,18 @@ EXPECTED_GODOT_VERSION="$(tr -d '\r\n' < "${GODOT_VERSION_FILE}")"
 normalize_godot_version() {
   local raw_version="${1-}"
   local normalized
+  local escaped_expected
+  local version_pattern
 
   raw_version="${raw_version//$'\r'/}"
   normalized="$(printf '%s' "${raw_version}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
 
-  case "${normalized}" in
-    "${EXPECTED_GODOT_VERSION}"|"${EXPECTED_GODOT_VERSION}".official)
-      printf '%s\n' "${EXPECTED_GODOT_VERSION}"
-      return 0
-      ;;
-    "${EXPECTED_GODOT_VERSION}".official.*)
-      local hash="${normalized#"${EXPECTED_GODOT_VERSION}".official.}"
-      if [[ "${hash}" =~ ^[[:alnum:]]+$ ]]; then
-        printf '%s\n' "${EXPECTED_GODOT_VERSION}"
-        return 0
-      fi
-      ;;
-  esac
+  escaped_expected="$(printf '%s' "${EXPECTED_GODOT_VERSION}" | sed 's/[.]/\\./g')"
+  version_pattern="^${escaped_expected}\.(official|custom_build)(\.[[:alnum:]]+)?$"
+  if [[ "${normalized}" =~ ${version_pattern} ]]; then
+    printf '%s.%s\n' "${EXPECTED_GODOT_VERSION}" "${BASH_REMATCH[1]}"
+    return 0
+  fi
   return 1
 }
 
@@ -87,7 +82,7 @@ verify_godot_dotnet_editor() {
     echo "Godot executable failed when queried with --help: ${godot_bin}" >&2
     return 1
   fi
-  if ! printf '%s\n' "${help_output}" | grep -Eq -- '(^|[[:space:]])--build-solutions([[:space:]=]|$)'; then
+  if ! printf '%s\n' "${help_output}" | grep -Fq -- '--build-solutions'; then
     echo "Godot executable does not expose the .NET editor option --build-solutions: ${godot_bin}" >&2
     return 1
   fi
