@@ -4,7 +4,7 @@ This document defines agent roles, ownership boundaries, and execution rules for
 
 ## Project Goal
 
-Build a long-lifespan, Wurm-style medieval sandbox with:
+Build a long-lifespan, Wurm-style ancient-world sandbox set around 0 AD with:
 
 - Slow progression, deep crafting, and terrain modification.
 - Physical, persistent resource and construction workflows.
