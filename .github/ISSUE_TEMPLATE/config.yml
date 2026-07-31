@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Architecture or scope discussion
+    url: https://github.com/nbstrong/ancient_history/discussions
+    about: Use a discussion before opening implementation work that requires an unresolved architecture decision.
