@@ -2,21 +2,12 @@
 set -euo pipefail
 
 PROJECT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
-ENGINE="${PROJECT_DIR}/../../../Godot_v4.3-stable_mono_win64/Godot_v4.3-stable_mono_win64.exe"
+# shellcheck source=tools/toolchain.sh
+source "${PROJECT_DIR}/tools/toolchain.sh"
 
-if [[ ! -f "$ENGINE" ]]; then
-  echo "Godot editor not found: $ENGINE" >&2
-  exit 1
-fi
+GODOT_BIN_PATH="$(resolve_godot_bin)"
+GODOT_VERSION="$(get_godot_version "${GODOT_BIN_PATH}")"
+printf 'Using Godot %s: %s\n' "${GODOT_VERSION}" "${GODOT_BIN_PATH}" >&2
 
-# The bundled editor is a Windows executable. Convert the project path when
-# running from WSL or Git Bash so Godot receives a native Windows path.
-if command -v wslpath >/dev/null 2>&1; then
-  GODOT_PROJECT_DIR="$(wslpath -w "$PROJECT_DIR")"
-elif command -v cygpath >/dev/null 2>&1; then
-  GODOT_PROJECT_DIR="$(cygpath -w "$PROJECT_DIR")"
-else
-  GODOT_PROJECT_DIR="$PROJECT_DIR"
-fi
-
-exec "$ENGINE" --editor --path "$GODOT_PROJECT_DIR" "$@"
+GODOT_PROJECT_DIR="$(godot_project_path "${GODOT_BIN_PATH}" "${PROJECT_DIR}")"
+exec "${GODOT_BIN_PATH}" --editor --path "${GODOT_PROJECT_DIR}" "$@"
