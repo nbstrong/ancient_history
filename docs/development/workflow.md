@@ -142,7 +142,7 @@ The implementation agent must not:
 
 - Introduce a new architecture pattern without an accepted ADR.
 - Add a dependency that the issue does not permit.
-- weaken an acceptance criterion to make a test pass.
+- Weaken an acceptance criterion to make a test pass.
 - Claim human validation.
 - Bundle cleanup or unrelated refactors into the task.
 
@@ -182,7 +182,7 @@ Use `docs/development/human-test-report.md`. The report must include the tested 
 
 A pull request is mergeable only when:
 
-- CI passes.
+- All required automated checks pass. Before CI exists, the pull request must record successful issue-specific validation.
 - Required review is approved.
 - All blocking comments are resolved.
 - Human validation passes when required.
