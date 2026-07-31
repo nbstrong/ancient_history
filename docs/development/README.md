@@ -1,22 +1,26 @@
 # Development Process
 
-## Workflow
+Start here:
 
-- [Delegated development workflow](workflow.md)
+- [Development process principles](process-principles.md)
+- [Risk-based development workflow](workflow.md)
+
+## Pull Requests and Merge
+
 - [Pull request lifecycle](pr-lifecycle.md)
 - [Merge policy](merge-policy.md)
-- [Label taxonomy](status-labels.md)
+- [Pull request review checklist](review-checklist.md)
+- [Browser review prompt](agent-review-prompt.md)
 
-## Issue Preparation
+## Issues and Agents
 
 - [Issue authoring standard](issue-authoring.md)
 - [Specification-ready checklist](specification-ready-checklist.md)
 - [Implementation agent execution rules](agent-execution.md)
+- [Label taxonomy](status-labels.md)
 
-## Review and Evidence
+## Evidence
 
-- [Browser review prompt](agent-review-prompt.md)
-- [Pull request review checklist](review-checklist.md)
 - [Test evidence requirements](test-evidence.md)
 - [Human engine test report](human-test-report.md)
 
@@ -24,4 +28,4 @@
 
 - [Milestone 0: Reproducible Bootstrap](milestone-0.md)
 
-Implementation work is issue-driven. Only fully specified, dependency-complete issues should be delegated to coding agents.
+The default is the lightest process that safely fits the change. Low-risk work may use a concise pull request without a separate implementation issue. Stronger specification, testing, review, and evidence requirements apply only to the medium- and high-risk concerns actually affected.
