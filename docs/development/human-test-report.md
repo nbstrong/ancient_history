@@ -1,90 +1,42 @@
 # Human Engine Test Report
 
-Copy this template into the implementing pull request or attach a completed report. Test the exact proposed head commit.
+Use this focused template when automated checks cannot adequately prove affected Godot or runtime behavior. Delete sections that are not relevant.
 
-## Identification
+## Change Tested
 
-- Pull request:
-- Linked issue:
-- Commit SHA:
-- Tester:
-- Test date:
+- Pull request or branch:
+- Commit, when behavior-sensitive:
+- Tester and date:
 
 ## Environment
 
 - Godot version:
-- .NET version:
+- .NET version, when relevant:
 - Operating system:
-- GPU and graphics API, when relevant:
-- Server configuration:
-- Database state or seed:
-- Client count:
-- Export build or editor run:
+- Other relevant configuration:
 
-## Prerequisites
+## Behavior Tested
 
-1.
-2.
-3.
+State the visible, interactive, import/export, graphics, input, audio, connection, or runtime behavior affected by the change.
 
-## Procedure Performed
+## Procedure and Result
 
 1.
 2.
 3.
 
-## Expected Results
+Result: PASS / FAIL
 
-- [ ]
-- [ ]
-- [ ]
-
-## Observed Results
-
-Describe visible behavior, state revisions, logs, reconnect behavior, restart behavior, timing, and any deviations.
-
-## Required Regression Checks
-
-- [ ] Project imports without unexpected errors.
-- [ ] Client starts and exits cleanly.
-- [ ] Server starts and exits cleanly.
-- [ ] Existing connection flow remains functional.
-- [ ] No new recurring errors appear in client or server logs.
-- [ ] Issue-specific regressions were checked.
-
-Mark non-applicable checks and explain why.
-
-## Recovery Checks
-
-When applicable:
-
-- [ ] Client reconnect converges to authoritative state.
-- [ ] Server restart restores canonical state.
-- [ ] Duplicate input does not duplicate an effect.
-- [ ] Interrupted action does not partially commit.
-- [ ] Revision or sequence mismatch triggers the specified recovery path.
+Observations:
 
 ## Evidence
 
-Attach or link:
+Attach screenshots or video only when they prove the affected visual or interactive criterion. Include logs or state output only when needed to prove a failure, recovery path, revision, or durable result.
 
-- Screenshots for visible state.
-- Video for interaction, timing, animation, reconnect, or multi-client behavior.
-- Client logs.
-- Server logs.
-- Database queries or state dumps when persistence is under test.
+## Defects
 
-## Defects Found
-
-- None, or link each defect issue.
-
-## Final Result
-
-- [ ] PASS
-- [ ] FAIL
-
-Comments:
+None, or link the defect.
 
 ## Retest Policy
 
-Any later commit that can affect the tested behavior invalidates this result. Record a new test report against the new head commit before merge.
+Retest only after a later commit that can affect the behavior tested above. Documentation-only, test-only, unrelated metadata, and other behavior-neutral changes do not invalidate this report.
