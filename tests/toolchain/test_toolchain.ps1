@@ -8,18 +8,18 @@ $failures = 0
 function Pass([string] $Name) { Write-Output "PASS: $Name" }
 function Fail([string] $Name) { Write-Output "FAIL: $Name"; $script:failures++ }
 
-function Assert-Normalizes([string] $Input, [string] $Expected) {
+function Assert-Normalizes([string] $VersionText, [string] $Expected) {
     try {
-        $actual = Normalize-GodotVersion -RawVersion $Input
-        if ($actual -eq $Expected) { Pass "accepts $Input" } else { Fail "accepts $Input" }
-    } catch { Fail "accepts $Input" }
+        $actual = Normalize-GodotVersion -RawVersion $VersionText
+        if ($actual -eq $Expected) { Pass "accepts $VersionText" } else { Fail "accepts $VersionText" }
+    } catch { Fail "accepts $VersionText" }
 }
 
-function Assert-Rejects([string] $Input) {
+function Assert-Rejects([string] $VersionText) {
     try {
-        [void](Normalize-GodotVersion -RawVersion $Input)
-        Fail "rejects $Input"
-    } catch { Pass "rejects $Input" }
+        [void](Normalize-GodotVersion -RawVersion $VersionText)
+        Fail "rejects $VersionText"
+    } catch { Pass "rejects $VersionText" }
 }
 
 Assert-Normalizes '4.7.1.stable.mono.double.official' '4.7.1.stable.mono.double.official'
