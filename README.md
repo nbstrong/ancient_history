@@ -45,8 +45,8 @@ Trees, construction, crafting breadth, settlements, caves, advanced ecology, and
 - [`docs/feature-sprint-0-contracts.md`](docs/feature-sprint-0-contracts.md): delivery-semantics acceptance criteria.
 - [`docs/feature-step-1-terrain-core.md`](docs/feature-step-1-terrain-core.md): authoritative terrain specification.
 - [`docs/adr/`](docs/adr/): architecture decision records.
-- [`docs/development/`](docs/development/): delegated issue workflow, review process, evidence requirements, and human engine testing.
-- [`AGENTS.md`](AGENTS.md): ownership and execution rules.
+- [`docs/development/`](docs/development/): risk-based development workflow, review, evidence, and human testing.
+- [`AGENTS.md`](AGENTS.md): durable architecture boundaries and agent execution rules.
 
 ## Development Bootstrap
 
@@ -65,6 +65,8 @@ Until those commands exist, follow the current project files directly and treat 
 
 ## Contribution Rule
 
-Implementation work is issue-driven. Delegate only issues whose dependencies are complete and whose specification has passed the readiness checklist in `docs/development/`.
+Use the lightest process that safely fits the change. Low-risk documentation, tooling, metadata, scaffolding, mechanical, and test-only work may use a concise pull request without a separate implementation issue. Medium- and high-risk work should use issues with detail proportional to the affected behavior and risk.
 
-Complete the current milestone's automated exit criteria before expanding scope. High-cost or irreversible technical changes require an Architecture Decision Record in `docs/adr/`.
+Review and evidence requirements focus on supported workflows and material invariants. Reserve exhaustive specification, adversarial testing, recovery evidence, and ADRs for persistence, concurrency, protocol, security, authority, economy, and high-cost architecture work.
+
+See [`docs/development/process-principles.md`](docs/development/process-principles.md) and [`docs/development/workflow.md`](docs/development/workflow.md).
