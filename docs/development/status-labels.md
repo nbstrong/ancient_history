@@ -1,5 +1,7 @@
 # Label Taxonomy
 
+Labels help coordination; they are not prerequisites for small, obvious work.
+
 ## Status
 
 - `status:planned`
@@ -22,9 +24,9 @@
 
 ## Risk
 
-- `risk:low`
-- `risk:medium`
-- `risk:high`
+- `risk:low`: documentation, tooling, metadata, scaffolding, mechanical, or test-only work.
+- `risk:medium`: ordinary feature or subsystem work.
+- `risk:high`: persistence, concurrency, recovery, protocol, security, authority, economy, or architecture-sensitive work.
 
 ## Agent Routing
 
@@ -32,11 +34,11 @@
 - `agent:standard`
 - `agent:strong`
 
-## Label Rules
+## Usage
 
-- Apply exactly one status label.
-- Apply all relevant area labels, but keep one area primary in the issue objective.
-- Apply one risk label.
-- Apply one agent-routing label before delegation.
-- `status:ready` means all dependencies are merged and the issue passed specification review.
-- `risk:high` work should normally use `agent:strong` and require explicit concurrency, recovery, compatibility, or security review.
+- Apply labels when they improve planning, filtering, delegation, or dependency tracking.
+- Medium/high-risk milestone issues should normally have status, area, risk, and routing labels.
+- Low-risk pull requests do not need labels merely to satisfy process.
+- Use `status:blocked` only for a concrete named dependency or decision.
+- Use `status:human-test` only when human behavior validation is the remaining gate.
+- `risk:high` work should normally receive explicit review of the high-risk concern and use an appropriately capable agent.
