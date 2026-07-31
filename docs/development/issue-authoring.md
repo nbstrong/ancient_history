@@ -2,89 +2,78 @@
 
 ## Purpose
 
-Implementation issues are executable contracts for delegated agents. They must remove avoidable interpretation while preserving a narrow place for implementation judgment.
+Issues should make implementation easier, not front-load every possible review concern. Use the minimum detail needed for the change's risk level.
 
-## Required Sections
+## Low-Risk Work
 
-Every implementation issue contains:
+A separate issue is optional for documentation, local tooling, project metadata, scaffolding, mechanical refactors, and test-only fixes.
+
+When an issue is useful, include only:
 
 1. Objective
-2. Background and governing documents
-3. Dependencies
-4. Required changes
-5. Expected files
-6. Required interfaces and data contracts
-7. Implementation constraints
-8. Non-goals
-9. Automated acceptance criteria
-10. Human engine validation
-11. Evidence required
-12. Stop conditions
-13. Definition of done
+2. Relevant context or constraints
+3. Acceptance criteria
+4. Human validation, when applicable
 
-Use `.github/ISSUE_TEMPLATE/implementation.yml` to enforce these sections.
+Do not require expected-file lists, exhaustive non-goals, evidence plans, stop conditions, or a custom definition of done unless they prevent a real ambiguity.
 
-## Writing Requirements
+## Medium-Risk Work
 
-### Objective
+Include:
 
-Describe one observable outcome. Avoid broad subsystem names.
+1. Objective
+2. Dependencies
+3. Relevant governing documents
+4. Required behavior and important interfaces
+5. Acceptance criteria for success and realistic failure paths
+6. Human validation when automated checks are insufficient
+
+Leave implementation details to the agent unless they are compatibility, architecture, or safety constraints.
+
+## High-Risk Work
+
+For migrations, transactions, concurrency, recovery, idempotency, economy integrity, security, protocol compatibility, authoritative state, or irreversible architecture, also define the applicable:
+
+- Invariants
+- Failure and retry semantics
+- Recovery behavior
+- Compatibility expectations
+- Resource limits
+- ADR decisions
+
+Only high-risk concerns need adversarial or failure-injection acceptance criteria by default.
+
+## Observe Before Specifying
+
+Inspect real supported tools and interfaces before writing exact parsers, output formats, command behavior, or platform assumptions when practical. If observed behavior differs from the issue, correct the issue once and continue from the observed contract.
+
+## Acceptance Criteria
+
+Each criterion should prove an observable result. Prefer a small set of meaningful checks over exhaustive matrices.
 
 Good:
 
-> Add an executable world-server host that reports readiness and shuts down gracefully.
+- `dotnet build` succeeds.
+- The supported Godot editor completes a headless import/build.
+- Retrying a committed command does not duplicate state.
 
-Bad:
+Avoid criteria that exist only to exercise remote or unsupported edge cases.
 
-> Implement the backend.
+## Human Validation
 
-### Required Changes
+Require human testing only for affected behavior that automated checks do not adequately prove. State the action and expected observation. Request screenshots or video only when they are the clearest evidence of a visual or interactive result.
 
-Specify exact behavior and boundaries. Name files, public types, commands, serialized fields, schema constraints, scene nodes, and error behavior when those details are known.
+## Stop Conditions
 
-Do not ask the implementation agent to choose among unresolved architectures. Record the choice in an ADR first.
+Use stop conditions only for material uncertainty, such as:
 
-### Automated Acceptance Criteria
+- A governing ADR conflicts with the work.
+- A new architecture or runtime dependency is required.
+- A public contract must change unexpectedly.
+- The task cannot meet its objective without significant scope expansion.
 
-Each criterion must produce a pass or fail result. Prefer named tests and commands.
+Agents should resolve minor unspecified implementation details through repository conventions rather than stopping.
 
-Good:
+## Sizing
 
-- `SameKeyDifferentHash_ReturnsConflictWithoutCallingDomainMutation`
-- `dotnet build -warnaserror` exits successfully.
-
-Bad:
-
-- Code is robust.
-- Networking works well.
-
-### Human Validation
-
-Provide exact prerequisites, actions, observations, and regression checks. Visual or interactive acceptance criteria must not be replaced by a general request to "test in Godot."
-
-### Stop Conditions
-
-Lower-capability agents must stop when:
-
-- An accepted ADR conflicts with the issue.
-- A dependency is missing or has a different interface.
-- A new dependency or architecture decision appears necessary.
-- Required behavior cannot be implemented without expanding scope.
-- A test requirement appears impossible or internally inconsistent.
-
-## Issue Sizing
-
-Split an issue when it includes more than one independently reviewable result, crosses unrelated subsystems, or requires separate human validation procedures.
-
-The expected default is one issue, one branch, one pull request, and one squash commit.
-
-## Ready Review
-
-Before applying `status:ready`, a reviewer confirms:
-
-- Dependencies are merged.
-- Governing documents exist on the default branch.
-- Interfaces are exact enough to implement.
-- Tests cover success and relevant failure behavior.
-- Human validation is actionable.
-- No architecture decision remains open.
+Prefer one observable result per pull request. Split work when concerns are independently useful, separately risky, or require unrelated validation—not merely because several files or layers are touched.
