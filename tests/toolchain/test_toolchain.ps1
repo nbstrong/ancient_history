@@ -34,6 +34,7 @@ Assert-Rejects '4.7.1.stable.mono.double.custom_build.'
 Assert-Rejects '4.7.1.stable.mono.double.custom_build.ab-bad'
 Assert-Rejects '4.7.1.stable.mono.double.custom_build.ab_bad'
 Assert-Rejects '4.7.1.stable.mono.double.custom_build.ab.bad'
+Assert-Rejects '4.7.1.stable.mono.double.custom_build.é'
 Assert-Rejects '4.7.0.stable.mono.double.custom_build.a13da4feb'
 Assert-Rejects '4.7.2.stable.mono.double.custom_build.a13da4feb'
 Assert-Rejects '4.8.0.stable.mono.double.custom_build.a13da4feb'
@@ -64,6 +65,9 @@ try {
         & (Join-Path $root 'open_godot.ps1') '--test-argument' | Out-Null
         $launchOutput = Get-Content -LiteralPath $launchLog -Raw
         if ($launchOutput.Contains('--editor') -and $launchOutput.Contains('--test-argument')) { Pass 'PowerShell launcher opens the override executable' } else { Fail 'PowerShell launcher opens the override executable' }
+
+        $ansiHelp = "$([char]27)[36m--build-solutions$([char]27)[0m  Build scripting solutions"
+        try { Test-GodotBuildSolutionsHelp -HelpOutput $ansiHelp; Pass 'PowerShell accepts ANSI-colored --build-solutions help' } catch { Fail 'PowerShell accepts ANSI-colored --build-solutions help' }
 
         $standard = Join-Path $temp 'standard-godot.cmd'
         Set-Content -LiteralPath $standard -Encoding ASCII -Value @('@echo off', 'if "%~1"=="--version" (echo 4.7.1.stable.mono.double.custom_build.a13da4feb & exit /b 0)', 'if "%~1"=="--help" (echo standard editor help without .NET options & exit /b 0)', 'exit /b 0')

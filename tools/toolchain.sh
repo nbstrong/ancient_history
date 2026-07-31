@@ -21,7 +21,7 @@ normalize_godot_version() {
   normalized="$(printf '%s' "${raw_version}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
 
   escaped_expected="$(printf '%s' "${EXPECTED_GODOT_VERSION}" | sed 's/[.]/\\./g')"
-  version_pattern="^${escaped_expected}\.(official|custom_build)(\.[[:alnum:]]+)?$"
+  version_pattern="^${escaped_expected}\.(official|custom_build)(\.[A-Za-z0-9]+)?$"
   if [[ "${normalized}" =~ ${version_pattern} ]]; then
     printf '%s.%s\n' "${EXPECTED_GODOT_VERSION}" "${BASH_REMATCH[1]}"
     return 0

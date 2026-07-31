@@ -71,6 +71,17 @@ function Get-GodotVersion {
     return (Normalize-GodotVersion -RawVersion $output.Trim())
 }
 
+function Test-GodotBuildSolutionsHelp {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string] $HelpOutput
+    )
+
+    if ($HelpOutput.IndexOf('--build-solutions', [System.StringComparison]::Ordinal) -lt 0) {
+        throw 'Godot executable does not expose the .NET editor option --build-solutions'
+    }
+}
+
 function Test-GodotDotnetEditor {
     param(
         [Parameter(Mandatory = $true)]
@@ -81,7 +92,9 @@ function Test-GodotDotnetEditor {
     if ($LASTEXITCODE -ne 0) {
         throw "Godot executable failed when queried with --help: $GodotBin"
     }
-    if ($helpOutput -notmatch '(?m)(^|\s)--build-solutions(?:\s|=|$)') {
+    try {
+        Test-GodotBuildSolutionsHelp -HelpOutput $helpOutput
+    } catch {
         throw "Godot executable does not expose the .NET editor option --build-solutions: $GodotBin"
     }
 }
