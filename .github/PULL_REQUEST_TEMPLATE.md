@@ -1,72 +1,28 @@
-## Linked issue
+## What changed
 
-Closes #
+Describe the observable result and why it is needed.
 
-## Requirement mapping
+Closes #<!-- issue number when applicable -->
 
-Map each substantive change to a requirement or acceptance criterion in the linked issue.
+## Risk
 
-| Issue requirement | Implementation | Evidence |
-|---|---|---|
-| | | |
+- Risk level: Low / Medium / High
+- Material risks affected: None, or list only applicable concerns such as persistence, recovery, concurrency, protocol compatibility, security, authority, or visible Godot behavior.
 
-## Implementation summary
+## Validation
 
-Describe what changed and why. Keep this limited to the linked issue.
-
-## Deviations and scope changes
-
-State `None` or explain every deviation from the issue, every file changed outside the expected-file list, and every new dependency.
-
-## Automated validation
-
-List exact commands and results.
+List focused commands or checks with concise results.
 
 ```text
-command
-result
+command — PASS / FAIL / unavailable
 ```
 
-- [ ] Build succeeds with no new warnings.
-- [ ] Required unit tests pass.
-- [ ] Required integration tests pass.
-- [ ] Existing test suite passes.
-- [ ] Failure and recovery cases required by the issue are tested.
-
-## Human engine validation
-
-Do not claim this section passed unless a human tested the exact head commit.
+## Human validation
 
 Required: Yes / No
 
-Commit tested:
-Godot version:
-Operating system:
-Tester:
-Result: Pending / Pass / Fail / Not required
+When required, state the affected behavior, environment, result, and attach evidence only when it proves a visual or interactive criterion.
 
-Procedure and evidence:
+## Notes
 
-## Risk review
-
-Address applicable risks explicitly:
-
-- Concurrency and ordering
-- Persistence, migration, and recovery
-- Idempotency and duplication
-- Client/server authority
-- Protocol compatibility
-- Performance and resource limits
-- Security and malformed input
-- Godot scene, resource, and rendering regressions
-
-## Reviewer checklist
-
-- [ ] The PR implements the linked issue without unapproved architecture changes.
-- [ ] No unrelated changes are present.
-- [ ] Public interfaces and serialized contracts match the issue and ADRs.
-- [ ] Tests prove success, rejection, retry, concurrency, and recovery behavior where applicable.
-- [ ] Client input is not treated as authoritative state.
-- [ ] Persistence changes include migration and rollback/recovery consideration.
-- [ ] Human-test instructions are complete and reproducible.
-- [ ] Documentation is updated.
+Mention scope deviations, new dependencies, compatibility changes, or follow-up work. Delete this section when there are none.
