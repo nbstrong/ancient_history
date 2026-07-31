@@ -18,6 +18,7 @@ DOTNET_VERSION="$(${DOTNET_BIN} --version 2>&1)" || fail "dotnet --version faile
 
 GODOT_BIN_PATH="$(resolve_godot_bin)" || exit 1
 GODOT_VERSION="$(get_godot_version "${GODOT_BIN_PATH}")" || exit 1
+verify_godot_dotnet_editor "${GODOT_BIN_PATH}" || exit 1
 
 LOG_FILE="$(mktemp)"
 trap 'rm -f "${LOG_FILE}"' EXIT

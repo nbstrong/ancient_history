@@ -28,6 +28,9 @@ Assert-Rejects '4.7.0.stable'
 Assert-Rejects '4.7.2.stable'
 Assert-Rejects '4.8.0.stable'
 Assert-Rejects '4.7.1.beta1'
+Assert-Rejects '4.7.1.stable.official.ab-bad'
+Assert-Rejects '4.7.1.stable.official.ab_bad'
+Assert-Rejects '4.7.1.stable.official.ab.bad'
 
 $missing = Join-Path ([IO.Path]::GetTempPath()) 'ancient-history-missing-godot.exe'
 $oldOverride = $env:GODOT_BIN
@@ -43,7 +46,7 @@ New-Item -ItemType Directory -Path $temp | Out-Null
 try {
     $good = Join-Path $temp 'good-godot.cmd'
     $launchLog = Join-Path $temp 'launcher.log'
-    Set-Content -LiteralPath $good -Encoding ASCII -Value @('@echo off', 'if "%~1"=="--version" (echo 4.7.1.stable.official.abc123 & exit /b 0)', "echo %*>>`"$launchLog`"", 'if "%~1"=="--headless" exit /b 1', 'exit /b 0')
+    Set-Content -LiteralPath $good -Encoding ASCII -Value @('@echo off', 'if "%~1"=="--version" (echo 4.7.1.stable.official.abc123 & exit /b 0)', 'if "%~1"=="--help" (echo --build-solutions & exit /b 0)', "echo %*>>`"$launchLog`"", 'if "%~1"=="--headless" exit /b 1', 'exit /b 0')
     $oldOverride = $env:GODOT_BIN
     try {
         $env:GODOT_BIN = $good
@@ -54,6 +57,10 @@ try {
         & (Join-Path $root 'open_godot.ps1') '--test-argument' | Out-Null
         $launchOutput = Get-Content -LiteralPath $launchLog -Raw
         if ($launchOutput.Contains('--editor') -and $launchOutput.Contains('--test-argument')) { Pass 'PowerShell launcher opens the override executable' } else { Fail 'PowerShell launcher opens the override executable' }
+
+        $standard = Join-Path $temp 'standard-godot.cmd'
+        Set-Content -LiteralPath $standard -Encoding ASCII -Value @('@echo off', 'if "%~1"=="--version" (echo 4.7.1.stable & exit /b 0)', 'if "%~1"=="--help" (echo standard editor help without .NET options & exit /b 0)', 'exit /b 0')
+        try { Invoke-GodotHeadlessBuild -GodotBin $standard -ProjectDir $root; Fail 'standard non-.NET editor is rejected when it silently ignores --build-solutions' } catch { Pass 'standard non-.NET editor is rejected when it silently ignores --build-solutions' }
     } finally {
         $env:GODOT_BIN = $oldOverride
     }

@@ -70,6 +70,21 @@ function Get-GodotVersion {
     return (Normalize-GodotVersion -RawVersion $output.Trim())
 }
 
+function Test-GodotDotnetEditor {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string] $GodotBin
+    )
+
+    $helpOutput = & $GodotBin '--help' 2>&1 | Out-String
+    if ($LASTEXITCODE -ne 0) {
+        throw "Godot executable failed when queried with --help: $GodotBin"
+    }
+    if ($helpOutput -notmatch '(?m)(^|\s)--build-solutions(?:\s|=|$)') {
+        throw "Godot executable does not expose the .NET editor option --build-solutions: $GodotBin"
+    }
+}
+
 function Get-DotnetVersion {
     $dotnet = Get-Command -Name dotnet -CommandType Application -ErrorAction SilentlyContinue | Select-Object -First 1
     if ($null -eq $dotnet) {
@@ -95,6 +110,7 @@ function Invoke-GodotHeadlessBuild {
         [string] $ProjectDir
     )
 
+    Test-GodotDotnetEditor -GodotBin $GodotBin
     $output = & $GodotBin '--headless' '--editor' '--path' $ProjectDir '--build-solutions' '--quit' 2>&1 | Out-String
     if ($LASTEXITCODE -ne 0) {
         throw "Godot .NET headless import/build check failed for $GodotBin`n$output"

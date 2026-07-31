@@ -56,7 +56,8 @@ dotnet --version
 ```
 
 Verification requires `dotnet --version` to print `10.0.302`, Godot to report
-the normalized prefix `4.7.1.stable`, and the Godot .NET editor to complete:
+the normalized prefix `4.7.1.stable`, expose the .NET-only
+`--build-solutions` help option, and complete:
 
 ```text
 --headless --editor --path <project> --build-solutions --quit

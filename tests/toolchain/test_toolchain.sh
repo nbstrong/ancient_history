@@ -38,6 +38,9 @@ assert_rejects '4.7.0.stable'
 assert_rejects '4.7.2.stable'
 assert_rejects '4.8.0.stable'
 assert_rejects '4.7.1.beta1'
+assert_rejects '4.7.1.stable.official.ab-bad'
+assert_rejects '4.7.1.stable.official.ab_bad'
+assert_rejects '4.7.1.stable.official.ab.bad'
 
 if GODOT_BIN="${TEMP_DIR}/missing-godot" resolve_godot_bin >/dev/null 2>&1; then
   fail 'missing GODOT_BIN fails deterministically'
@@ -50,10 +53,15 @@ write_mock_godot() {
   local version="$2"
   local headless_exit="$3"
   local log_file="$4"
+  local help_output="${5:---build-solutions}"
   {
     printf '%s\n' '#!/usr/bin/env bash'
     printf '%s\n' 'if [[ "$1" == "--version" ]]; then'
     printf '  printf "%%s\\n" "%s"\n' "${version}"
+    printf '%s\n' '  exit 0'
+    printf '%s\n' 'fi'
+    printf '%s\n' 'if [[ "$1" == "--help" ]]; then'
+    printf '  printf "%%s\\n" "%s"\n' "${help_output}"
     printf '%s\n' '  exit 0'
     printf '%s\n' 'fi'
     printf 'printf "%%s\\n" "$*" >> "%s"\n' "${log_file}"
@@ -74,6 +82,15 @@ if path_result="$(PATH="${MOCK_BIN_DIR}:/usr/bin:/bin" env -u GODOT_BIN bash -c 
   pass 'PATH lookup selects a supported Godot command'
 else
   fail 'PATH lookup selects a supported Godot command'
+fi
+
+STANDARD_LOG="${TEMP_DIR}/standard.log"
+STANDARD_GODOT="${TEMP_DIR}/standard-godot"
+write_mock_godot "${STANDARD_GODOT}" '4.7.1.stable' 0 "${STANDARD_LOG}" 'standard editor help without .NET options'
+if PATH="${MOCK_BIN_DIR}:${PATH}" GODOT_BIN="${STANDARD_GODOT}" "${ROOT}/tools/verify-toolchain.sh" >/dev/null 2>&1; then
+  fail 'standard non-.NET editor is rejected when it silently ignores --build-solutions'
+else
+  pass 'standard non-.NET editor is rejected when it silently ignores --build-solutions'
 fi
 
 if PATH="${MOCK_BIN_DIR}:${PATH}" GODOT_BIN="${TEMP_DIR}/missing-godot" "${ROOT}/tools/verify-toolchain.sh" >/dev/null 2>&1; then
