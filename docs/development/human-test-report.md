@@ -1,42 +1,15 @@
-# Human Engine Test Report
+# Editor Check
 
-Use this focused template when automated checks cannot adequately prove affected Godot or runtime behavior. Delete sections that are not relevant.
+There is no human test report workflow.
 
-## Change Tested
+The implementation agent owns all command-line validation, including PowerShell and Windows tooling invoked from WSL, plus headless Godot checks.
 
-- Pull request or branch:
-- Commit, when behavior-sensitive:
-- Tester and date:
+A human is needed only when visible or interactive Godot behavior must be inspected in the editor.
 
-## Environment
+Before merging such a pull request:
 
-- Godot version:
-- .NET version, when relevant:
-- Operating system:
-- Other relevant configuration:
+1. Open the project in Godot.
+2. Look at or interact with the affected behavior.
+3. Merge only when it appears correct.
 
-## Behavior Tested
-
-State the visible, interactive, import/export, graphics, input, audio, connection, or runtime behavior affected by the change.
-
-## Procedure and Result
-
-1.
-2.
-3.
-
-Result: PASS / FAIL
-
-Observations:
-
-## Evidence
-
-Attach screenshots or video only when they prove the affected visual or interactive criterion. Include logs or state output only when needed to prove a failure, recovery path, revision, or durable result.
-
-## Defects
-
-None, or link the defect.
-
-## Retest Policy
-
-Retest only after a later commit that can affect the behavior tested above. Documentation-only, test-only, unrelated metadata, and other behavior-neutral changes do not invalidate this report.
+No screenshot, video, written report, environment record, commit SHA, checklist, or PR comment is required. The merge is the record that the editor check was accepted.
