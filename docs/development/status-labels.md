@@ -8,8 +8,9 @@ Labels help coordination; they are not prerequisites for small, obvious work.
 - `status:ready`
 - `status:in-progress`
 - `status:review`
-- `status:human-test`
 - `status:blocked`
+
+There is no separate human-test status. When an editor check is needed, the merger performs it immediately before merging.
 
 ## Area
 
@@ -28,7 +29,7 @@ Labels help coordination; they are not prerequisites for small, obvious work.
 - `risk:medium`: ordinary feature or subsystem work.
 - `risk:high`: persistence, concurrency, recovery, protocol, security, authority, economy, or architecture-sensitive work.
 
-## Agent Routing
+## Agent routing
 
 - `agent:small`
 - `agent:standard`
@@ -36,9 +37,8 @@ Labels help coordination; they are not prerequisites for small, obvious work.
 
 ## Usage
 
-- Apply labels when they improve planning, filtering, delegation, or dependency tracking.
-- Medium/high-risk milestone issues should normally have status, area, risk, and routing labels.
+- Apply labels only when they improve planning, filtering, delegation, or dependency tracking.
+- Medium/high-risk milestone issues should normally have useful status, area, risk, and routing labels.
 - Low-risk pull requests do not need labels merely to satisfy process.
 - Use `status:blocked` only for a concrete named dependency or decision.
-- Use `status:human-test` only when human behavior validation is the remaining gate.
-- `risk:high` work should normally receive explicit review of the high-risk concern and use an appropriately capable agent.
+- `risk:high` work should receive explicit review of the affected high-risk concern and use an appropriately capable agent.
