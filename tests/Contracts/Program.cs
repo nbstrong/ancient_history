@@ -61,6 +61,8 @@ int order = LockOrdering.Compare(
     (LockResourceClass.Entity, "e1"));
 Check(order < 0, "Lock primary ordering chunk before entity");
 
+await ServerHostTests.RunAsync(Check);
+
 if (failures > 0)
 {
     Environment.Exit(1);

@@ -6,6 +6,16 @@ Ancient History is an early-stage persistent sandbox MMO set around 0 AD, inspir
 
 The repository is currently building the first authoritative terrain vertical slice.
 
+The standalone world-server host can be started from the repository root with:
+
+```bash
+dotnet run --project src/server/WurmStyleGame.Server.csproj
+```
+
+It listens on `http://127.0.0.1:8080` by default and exposes liveness at
+`/health/live` and readiness at `/health/ready`. Standard ASP.NET Core URL
+configuration can override the default binding.
+
 ## Technical direction
 
 - Godot 4.x .NET client.
