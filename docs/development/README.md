@@ -22,7 +22,7 @@ Start here:
 ## Validation
 
 - [Automated evidence](test-evidence.md)
-- [Minimal editor check](human-test-report.md)
+- [Minimal editor check](editor-check.md)
 
 The implementation agent owns all command-line validation, including PowerShell and Windows tools invoked from WSL. Human involvement is limited to opening Godot and checking affected visible or interactive behavior. No proof is required; merging is the signoff.
 
