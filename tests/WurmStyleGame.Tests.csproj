@@ -10,4 +10,7 @@
     <ProjectReference Include="../src/shared/WurmStyleGame.Shared.csproj" />
     <ProjectReference Include="../src/server/WurmStyleGame.Server.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
 </Project>
