@@ -7,12 +7,13 @@ body:
       value: |
         Use this form when a separate issue is useful. Low-risk documentation, tooling, metadata, scaffolding, mechanical refactors, and test-only fixes may use a concise pull request without a full issue.
 
+        The implementation agent owns all command-line validation, including Windows PowerShell tasks invoked from WSL. Human involvement is limited to opening Godot and checking visible or interactive behavior.
+
   - type: textarea
     id: objective
     attributes:
       label: Objective
       description: State the observable result in one or two sentences.
-      placeholder: Add an executable world-server host that starts, reports healthy, and shuts down cleanly.
     validations:
       required: true
 
@@ -20,7 +21,7 @@ body:
     id: risk
     attributes:
       label: Risk level
-      description: Choose the highest risk actually affected by this change.
+      description: Choose the highest risk actually affected.
       options:
         - Low — docs, tooling, metadata, scaffolding, mechanical or test-only change
         - Medium — ordinary feature or subsystem work
@@ -32,10 +33,7 @@ body:
     id: context
     attributes:
       label: Relevant context and constraints
-      description: Link governing documents and state only constraints that materially affect implementation. Write None when unnecessary.
-      placeholder: |
-        Governed by docs/architecture.md.
-        Preserve the standalone server boundary.
+      description: Link governing documents and state only material constraints.
     validations:
       required: false
 
@@ -43,8 +41,7 @@ body:
     id: dependencies
     attributes:
       label: Dependencies
-      description: List blocking work or write None. Optional for independent low-risk changes.
-      placeholder: None
+      description: List blocking work when applicable.
     validations:
       required: false
 
@@ -52,31 +49,23 @@ body:
     id: behavior
     attributes:
       label: Required behavior or invariants
-      description: Describe important behavior, interfaces, failure semantics, or invariants. Leave implementation choices open unless compatibility or safety requires precision.
-      placeholder: |
-        - Starts as a standalone .NET process.
-        - Reports readiness after required dependencies initialize.
-        - Shuts down without abandoning committed writes.
+      description: Describe important behavior, interfaces, failure semantics, or invariants. Leave ordinary implementation choices open.
     validations:
       required: false
 
   - type: textarea
     id: acceptance
     attributes:
-      label: Acceptance criteria
-      description: Use a small set of observable checks covering success and realistic material failures.
-      placeholder: |
-        - [ ] `dotnet build` succeeds.
-        - [ ] Startup and graceful-shutdown tests pass.
-        - [ ] The process reports healthy in the supported local environment.
+      label: Automated acceptance criteria
+      description: Use a small set of observable automated checks covering success and realistic material failures. Include PowerShell or Windows command-line checks here when needed; the agent will run them from WSL.
     validations:
       required: true
 
   - type: dropdown
-    id: human_required
+    id: editor_required
     attributes:
-      label: Human validation required
-      description: Select Yes only when automated checks cannot adequately prove affected visible, interactive, import, export, or runtime behavior.
+      label: Editor check required
+      description: Select Yes only when the merger must open Godot to inspect visible or interactive behavior that automation cannot adequately establish.
       options:
         - "No"
         - "Yes"
@@ -84,11 +73,10 @@ body:
       required: true
 
   - type: textarea
-    id: human_validation
+    id: editor_check
     attributes:
-      label: Human validation
-      description: When required, state the action and expected observation. Request screenshots or video only when they prove the criterion.
-      placeholder: Open the project, perform the affected interaction, and confirm the expected visible result.
+      label: What should the merger inspect?
+      description: When required, state only what to open and what to look for. Do not request screenshots, reports, environment details, SHA attestations, or copied command output.
     validations:
       required: false
 
@@ -97,6 +85,5 @@ body:
     attributes:
       label: Material stop conditions
       description: Optional. Include only unresolved architecture, dependency, contract, or significant scope-expansion conditions.
-      placeholder: Stop if the change requires a new runtime dependency or changes the public protocol.
     validations:
       required: false
