@@ -1,68 +1,64 @@
 # Development Process Principles
 
-This repository optimizes for fast, reliable vertical-slice delivery. Process exists to reduce risk, not to maximize paperwork.
+This repository optimizes for fast, reliable vertical-slice delivery. Process exists to reduce risk, not create handoffs.
 
 ## Default posture
 
-- Observe real tools and interfaces before writing exact specifications.
-- Use the lightest process that safely fits the change.
-- Block only on defects that can materially break a supported workflow, violate a required invariant, lose data, create an incompatible contract, or introduce unapproved architecture.
-- Record useful evidence, not exhaustive transcripts.
-- Turn nonessential hardening into follow-up work instead of extending the current review indefinitely.
+- Agents own implementation and all command-line validation.
+- WSL is the normal agent environment. Agents may invoke Windows tools, including `powershell.exe` or `pwsh`, when platform-specific checks are needed.
+- Humans are not command runners or evidence collectors.
+- Human involvement is limited to opening Godot and checking visible or interactive behavior that cannot be validated automatically.
+- Merging an editor-affecting pull request means the merger performed and accepted that editor check.
+- No screenshot, video, report, tested-SHA attestation, or separate validation comment is required.
+- Block only on defects that materially break a supported workflow, violate a required invariant, lose data, create an incompatible contract, or introduce unapproved architecture.
+- Turn nonessential hardening into follow-up work instead of extending the current review.
 
 ## Risk levels
 
 ### Low risk
 
-Examples: documentation, local tooling, project metadata, simple scaffolding, mechanical refactors, and test-only changes.
+Documentation, local tooling, project metadata, simple scaffolding, mechanical refactors, and test-only changes.
 
-Expected process:
-
-- A concise issue or clearly scoped PR description.
-- Focused validation of the changed behavior.
-- One reviewer pass plus verification of requested fixes.
-- Human testing only when the change affects visible or interactive behavior.
+Use a concise description, focused automated validation, and no editor check unless visible Godot behavior changed.
 
 ### Medium risk
 
-Examples: ordinary gameplay, client, server, networking, or persistence features without new architecture or critical invariants.
+Ordinary gameplay, client, server, networking, or persistence features without new architecture or critical state invariants.
 
-Expected process:
-
-- Observable acceptance criteria.
-- Automated tests for success and realistic failure paths.
-- Human testing for affected interactive behavior.
-- Review focused on correctness, maintainability, and compatibility.
+Use observable acceptance criteria and automated tests for success and realistic failures. Add an editor check only for affected visible or interactive behavior.
 
 ### High risk
 
-Examples: migrations, transactions, concurrency, recovery, idempotency, economy integrity, authentication, security boundaries, protocol compatibility, authoritative world-state rules, and irreversible architecture decisions.
+Migrations, transactions, concurrency, recovery, idempotency, economy integrity, security boundaries, protocol compatibility, authoritative world-state rules, and irreversible architecture decisions.
 
-Expected process:
+Use explicit invariants, deeper automated tests, and ADRs where appropriate. Human involvement is still limited to the editor check.
 
-- Explicit invariants and failure semantics.
-- Adversarial tests where justified.
-- Detailed review and evidence for the affected risk.
-- ADRs for high-cost or irreversible decisions.
+## Validation policy
 
-## Evidence policy
+Agents should run every practical check themselves, including:
 
-Evidence must be proportional to the change:
+- .NET builds and tests.
+- Bash tooling.
+- Windows PowerShell scripts invoked from WSL when needed.
+- Headless Godot import, build, and runtime checks.
+- Database, server, networking, and recovery tests.
 
-- Prefer a short list of commands with PASS/FAIL summaries.
-- Include detailed logs only for failures, performance claims, recovery behavior, or high-risk invariants.
-- Screenshots and video are required only when they prove visible or interactive acceptance criteria.
-- A later commit invalidates human evidence only when it can affect the tested behavior.
-- Test-only, documentation-only, and unrelated metadata changes do not automatically require repeating prior human validation.
+Record concise PASS/FAIL summaries. Include detailed logs only when they explain a failure or high-risk result.
+
+## Editor check
+
+When a change affects visible or interactive Godot behavior, the merger opens the editor and checks the affected behavior before merging. This is an informal product sanity check, not a separate evidence workflow.
+
+No report is required. No artifact is required. Merge is the signoff.
 
 ## Review policy
 
 A reviewer should:
 
-1. Check the linked objective and affected risk.
+1. Check the objective and affected risk.
 2. Identify material blockers first.
-3. Classify nonessential improvements as follow-ups.
-4. Verify requested fixes without restarting the entire review from scratch unless the change creates new risk.
+3. Treat nonessential improvements as follow-ups.
+4. Verify requested fixes without restarting the entire review unless new risk was introduced.
 5. Stop expanding edge-case coverage once the supported workflow and stated invariants are adequately proven.
 
-Review comments should not silently redesign a correct issue. When the specification is wrong, amend it once using observed evidence and continue from the corrected contract.
+When a specification is wrong, correct it once using observed behavior and continue.
