@@ -1,32 +1,26 @@
 # Test Evidence Requirements
 
-Evidence should make the result trustworthy without turning the pull request into a transcript archive.
+Evidence should make automated results understandable without turning a pull request into a transcript archive.
 
-## Automated Evidence
+## Agent-owned validation
 
-For low- and medium-risk changes, record:
+The implementation agent runs all practical command-line checks, including:
 
-- The focused commands or checks performed.
-- A concise PASS/FAIL result.
-- Any unavailable validation that matters.
+- .NET builds and tests.
+- Bash tooling.
+- PowerShell scripts through `powershell.exe` or `pwsh` from WSL.
+- Windows executables from WSL when needed.
+- Headless Godot checks.
+- Server, database, networking, persistence, recovery, and compatibility tests.
+
+Record focused commands or checks with concise PASS, FAIL, or genuinely unavailable results.
 
 Include detailed output only when it explains a failure, performance claim, recovery result, or high-risk invariant.
 
-For high-risk persistence, concurrency, recovery, protocol, security, authority, or economy work, also record the configuration and evidence needed to understand the affected invariant.
+## Editor check
 
-CI links are useful when available but are not additional paperwork requirements when the result is already clear.
+No human evidence package is required.
 
-## Human Evidence
+When visible or interactive Godot behavior changed, the merger opens the editor and checks that behavior before merging. No screenshot, video, report, environment record, tested SHA, copied output, or validation comment is required.
 
-Record:
-
-- The supported environment.
-- The affected behavior tested.
-- Pass or fail.
-- Relevant observations or defects.
-
-Include the commit or branch state when behavior-sensitive changes are still occurring. A later commit invalidates human evidence only when it can affect the tested behavior.
-
-Use screenshots for visible static results and video for interaction or timing only when those artifacts prove an acceptance criterion. A successful command result may be better evidence for toolchain, import, build, or headless behavior.
-
-Do not require terminal screenshots when copyable output is available.
+The merge itself is the signoff.
