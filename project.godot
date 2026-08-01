@@ -14,10 +14,16 @@ compatibility/default_parent_skeleton_in_mesh_instance_3d=true
 
 [application]
 
-config/name="wurm_style_game"
+config/name="Ancient History"
+run/main_scene="res://src/client/Scenes/Main.tscn"
 config/features=PackedStringArray("4.7", "Double Precision", "Forward Plus")
 config/icon="res://icon.svg"
 
+[display]
+
+window/size/viewport_width=1280
+window/size/viewport_height=720
+
 [dotnet]
 
-project/assembly_name="wurm_style_game"
+project/assembly_name="AncientHistory.Client"
