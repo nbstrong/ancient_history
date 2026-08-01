@@ -2,27 +2,23 @@
 
 Ancient History is an early-stage persistent sandbox MMO set around 0 AD, inspired by Wurm-style terrain modification, physical resource processing, gradual construction, and player-driven settlement life.
 
-## Project Status
+## Project status
 
-The repository is currently in Sprint 0 contract scaffolding.
+The repository is currently building the first authoritative terrain vertical slice.
 
-The documentation defines the intended architecture and implementation gates. The current source contains prototype shared contracts, in-memory outbox and idempotency implementations, and a minimal contract test executable. It does not yet contain a playable client/server vertical slice.
+## Technical direction
 
-## Current Technical Direction
-
-- Godot 4.x .NET client for rendering, UI, input, and presentation prediction.
+- Godot 4.x .NET client.
 - Standalone .NET authoritative world server.
-- WebSocket transport for the initial vertical slice.
+- WebSocket transport initially.
 - Versioned shared protocol contracts with JSON encoding initially.
-- PostgreSQL as the only required durable dependency.
+- PostgreSQL as the durable dependency.
 - One logical world with internal chunk and zone partitioning.
 - Single-writer zone execution wherever practical.
-- Wurm-style corner-height terrain with one canonical owner per world corner.
+- Corner-height terrain with one canonical owner per world corner.
 - Transactional outbox, monotonic stream sequences, and idempotent commands.
 
-## First Playable Milestone
-
-The first playable proof is intentionally narrow:
+## First playable milestone
 
 1. Two Godot clients connect to one world server.
 2. Both receive the same authoritative terrain chunk.
@@ -30,43 +26,28 @@ The first playable proof is intentionally narrow:
 4. PostgreSQL commits the terrain change and replication event atomically.
 5. Both clients apply the ordered delta.
 6. Server restart restores identical terrain state.
-7. Reconnect converges through delta replay or a fresh snapshot.
-
-Trees, construction, crafting breadth, settlements, caves, advanced ecology, and distributed zone handoff follow this milestone.
+7. Reconnect converges through replay or a fresh snapshot.
 
 ## Documentation
 
-- [`docs/architecture.md`](docs/architecture.md): system boundaries, deployment topology, authority, and evolution.
-- [`docs/networking.md`](docs/networking.md): WebSocket-first protocol, streams, snapshots, deltas, and reconnect.
-- [`docs/data-model.md`](docs/data-model.md): PostgreSQL schema direction, transactions, outbox, snapshots, and recovery.
-- [`docs/simulation.md`](docs/simulation.md): authoritative scheduling, action pipeline, terrain, and protected invariants.
-- [`docs/roadmap.md`](docs/roadmap.md): milestone gates and current project status.
-- [`docs/implementation-plan.md`](docs/implementation-plan.md): ordered pull-request execution plan.
-- [`docs/feature-sprint-0-contracts.md`](docs/feature-sprint-0-contracts.md): delivery-semantics acceptance criteria.
-- [`docs/feature-step-1-terrain-core.md`](docs/feature-step-1-terrain-core.md): authoritative terrain specification.
-- [`docs/adr/`](docs/adr/): architecture decision records.
-- [`docs/development/`](docs/development/): risk-based development workflow, review, evidence, and human testing.
-- [`AGENTS.md`](AGENTS.md): durable architecture boundaries and agent execution rules.
+- [`docs/architecture.md`](docs/architecture.md)
+- [`docs/networking.md`](docs/networking.md)
+- [`docs/data-model.md`](docs/data-model.md)
+- [`docs/simulation.md`](docs/simulation.md)
+- [`docs/roadmap.md`](docs/roadmap.md)
+- [`docs/implementation-plan.md`](docs/implementation-plan.md)
+- [`docs/adr/`](docs/adr/)
+- [`docs/development/`](docs/development/)
+- [`AGENTS.md`](AGENTS.md)
 
-## Development Bootstrap
+## Development process
 
-The reproducible bootstrap is part of the first implementation milestone and is not complete yet.
+Use the lightest process that safely fits the change.
 
-The target developer workflow is:
+The implementation agent owns all command-line validation, including Bash, .NET, PowerShell and Windows executables invoked from WSL, headless Godot, server, database, networking, persistence, and recovery checks.
 
-```text
-./dev bootstrap
-./dev test
-./dev server
-./dev client
-```
+Human involvement is limited to opening Godot and checking affected visible or interactive behavior. No human evidence is required. Merging an editor-affecting pull request means the merger performed and accepted that editor check.
 
-Until those commands exist, follow the current project files directly and treat machine-specific launch scripts as temporary.
-
-## Contribution Rule
-
-Use the lightest process that safely fits the change. Low-risk documentation, tooling, metadata, scaffolding, mechanical, and test-only work may use a concise pull request without a separate implementation issue. Medium- and high-risk work should use issues with detail proportional to the affected behavior and risk.
-
-Review and evidence requirements focus on supported workflows and material invariants. Reserve exhaustive specification, adversarial testing, recovery evidence, and ADRs for persistence, concurrency, protocol, security, authority, economy, and high-cost architecture work.
+Reserve exhaustive specification and adversarial testing for material persistence, concurrency, recovery, protocol, security, authority, economy, and architecture risks.
 
 See [`docs/development/process-principles.md`](docs/development/process-principles.md) and [`docs/development/workflow.md`](docs/development/workflow.md).
