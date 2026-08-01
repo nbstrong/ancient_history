@@ -4,25 +4,22 @@ Describe the observable result and why it is needed.
 
 Closes #<!-- issue number when applicable -->
 
-## Risk
+## Automated validation
 
-- Risk level: Low / Medium / High
-- Material risks affected: None, or list only applicable concerns such as persistence, recovery, concurrency, protocol compatibility, security, authority, or visible Godot behavior.
-
-## Validation
-
-List focused commands or checks with concise results.
+List focused checks with concise results. The implementation agent owns all command-line checks, including PowerShell and Windows tools invoked from WSL.
 
 ```text
 command — PASS / FAIL / unavailable
 ```
 
-## Human validation
+## Editor check
 
 Required: Yes / No
 
-When required, state the affected behavior, environment, result, and attach evidence only when it proves a visual or interactive criterion.
+When required, state only what the merger should open and what visible or interactive behavior to inspect.
+
+No screenshot, report, tested SHA, environment record, or separate validation comment is required. Merging the pull request means the editor check passed.
 
 ## Notes
 
-Mention scope deviations, new dependencies, compatibility changes, or follow-up work. Delete this section when there are none.
+Mention material scope changes, new dependencies, compatibility changes, or follow-up work. Delete this section when there are none.
