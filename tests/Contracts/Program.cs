@@ -38,6 +38,7 @@ string repositoryRoot = FindRepositoryRoot();
 string projectText = File.ReadAllText(Path.Combine(repositoryRoot, "project.godot"));
 string sceneText = File.ReadAllText(Path.Combine(repositoryRoot, "src/client/Scenes/Main.tscn"));
 string clientProjectText = File.ReadAllText(Path.Combine(repositoryRoot, "AncientHistory.Client.csproj"));
+string clientSourceRoot = Path.Combine(repositoryRoot, "src/client");
 
 Check(
     projectText.Contains("run/main_scene=\"res://src/client/Scenes/Main.tscn\"", StringComparison.Ordinal),
@@ -72,6 +73,24 @@ foreach (Match resourceMatch in Regex.Matches(projectText + sceneText, "res://[^
 Check(
     !clientProjectText.Contains("WurmStyleGame.Server", StringComparison.Ordinal),
     "Client project has no server dependency");
+
+foreach (string clientScriptPath in Directory.EnumerateFiles(
+             clientSourceRoot,
+             "*.cs",
+             SearchOption.AllDirectories))
+{
+    string relativeScriptPath = Path.GetRelativePath(repositoryRoot, clientScriptPath);
+    string uidPath = $"{clientScriptPath}.uid";
+    Check(File.Exists(uidPath), $"Client script has UID sidecar: {relativeScriptPath}");
+
+    if (File.Exists(uidPath))
+    {
+        string uid = File.ReadAllText(uidPath).Trim();
+        Check(
+            Regex.IsMatch(uid, "^uid://[a-y0-8]+$"),
+            $"Client script UID is valid: {relativeScriptPath}");
+    }
+}
 
 var envelope = new MessageEnvelope<MutationCommand>(
     new ProtocolVersion(1, 0),
