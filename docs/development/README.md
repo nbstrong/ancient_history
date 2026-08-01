@@ -1,27 +1,29 @@
 # Development Process
 
-## Workflow
+Start here:
 
-- [Delegated development workflow](workflow.md)
+- [Development process principles](process-principles.md)
+- [Risk-based development workflow](workflow.md)
+
+## Pull requests and merge
+
 - [Pull request lifecycle](pr-lifecycle.md)
 - [Merge policy](merge-policy.md)
-- [Label taxonomy](status-labels.md)
+- [Pull request review checklist](review-checklist.md)
+- [Browser review prompt](agent-review-prompt.md)
 
-## Issue Preparation
+## Issues and agents
 
 - [Issue authoring standard](issue-authoring.md)
 - [Specification-ready checklist](specification-ready-checklist.md)
 - [Implementation agent execution rules](agent-execution.md)
+- [Label taxonomy](status-labels.md)
 
-## Review and Evidence
+## Validation
 
-- [Browser review prompt](agent-review-prompt.md)
-- [Pull request review checklist](review-checklist.md)
-- [Test evidence requirements](test-evidence.md)
-- [Human engine test report](human-test-report.md)
+- [Automated evidence](test-evidence.md)
+- [Minimal editor check](editor-check.md)
 
-## Milestones
+The implementation agent owns all command-line validation, including PowerShell and Windows tools invoked from WSL. Human involvement is limited to opening Godot and checking affected visible or interactive behavior. No proof is required; merging is the signoff.
 
-- [Milestone 0: Reproducible Bootstrap](milestone-0.md)
-
-Implementation work is issue-driven. Only fully specified, dependency-complete issues should be delegated to coding agents.
+Use the lightest process that safely fits the change. Stronger specification and automated testing apply only to risks actually affected.

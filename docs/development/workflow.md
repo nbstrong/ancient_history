@@ -1,200 +1,96 @@
-# Delegated Development Workflow
+# Risk-Based Development Workflow
 
 ## Purpose
 
-This repository is designed for issue-driven implementation by delegated coding agents, followed by automated validation, browser-based review, and human testing in Godot when engine behavior is affected.
+Ship working vertical slices quickly while preserving critical invariants. Process is proportional to risk and should avoid human handoffs.
 
-An issue is an executable specification. An implementation agent applies decisions recorded in the issue, specifications, and accepted ADRs. It does not invent architecture during implementation.
+## Start with reality
 
-## Delivery Gates
+Inspect real tools, interfaces, and supported environments before specifying exact output or behavior. Do not build contracts around guessed tool output.
 
-Every implementation passes three independent gates.
+## Risk classification
 
-### 1. Specification ready
+- **Low:** documentation, local tooling, metadata, scaffolding, mechanical refactors, and test-only changes.
+- **Medium:** ordinary gameplay, client, server, networking, or persistence features.
+- **High:** migrations, transactions, concurrency, recovery, idempotency, economy integrity, security, protocol compatibility, authoritative state, or irreversible architecture.
 
-An issue may receive work only when:
+Apply additional rigor only to the risk actually affected.
 
-- Its objective is observable and limited to one primary outcome.
-- Dependencies are merged or explicitly available.
-- Required interfaces and constraints are specified.
-- Automated acceptance criteria are objectively testable.
-- Human validation is either specified or explicitly not required.
-- Stop conditions identify when the implementer must request clarification.
+## Planning
 
-### 2. Engineering ready
+Low-risk work may use a concise pull request without a separate issue. Medium- and high-risk work should use an issue when dependencies, invariants, coordination, or milestone ordering benefit from one.
 
-A pull request may be approved only when:
+State the observable result, material constraints, and focused acceptance criteria. Expected-file lists, exhaustive non-goals, evidence plans, and custom definitions of done are optional.
 
-- The linked issue is fully implemented.
-- The diff contains no unrelated work.
-- Required tests and failure cases pass.
-- Public interfaces and serialized contracts match governing documents.
-- Reviewer comments are resolved.
-- Human-test instructions are complete.
+## Agent execution
 
-### 3. Product verified
+The implementation agent owns the complete non-visual workflow:
 
-An engine-affecting change may be merged only when a human has tested the exact proposed commit and recorded the result. A later code change invalidates affected human-test evidence.
+1. Implement the objective.
+2. Run focused automated checks.
+3. Run broader checks when shared surfaces or risk justify them.
+4. Run platform-specific command-line checks itself.
+5. Report concise PASS, FAIL, and genuinely unavailable results.
 
-## Issue States
+WSL is a supported agent environment. When Windows-specific validation is needed, the agent should invoke `powershell.exe`, `pwsh`, Windows executables, or other available host tools from WSL rather than delegating command execution to a human.
 
-Use these labels when available:
+The agent may make ordinary implementation decisions from repository conventions. It should stop only for unresolved architecture, incompatible dependencies, unexpected public-contract changes, or significant scope expansion.
 
-- `status:planned`: ordered but not executable.
-- `status:ready`: all dependencies and specification requirements are satisfied.
-- `status:in-progress`: one implementation agent owns the task.
-- `status:review`: implementation and automated checks are complete.
-- `status:human-test`: code review passed and engine validation remains.
-- `status:blocked`: a named dependency or decision prevents progress.
+## Pull requests
 
-Suggested area labels:
+A pull request should explain:
 
-- `area:client`
-- `area:server`
-- `area:protocol`
-- `area:persistence`
-- `area:networking`
-- `area:terrain`
-- `area:infrastructure`
-- `area:testing`
+- What changed.
+- Why it changed.
+- Focused automated validation.
+- Whether an editor check is needed and what the merger should look at.
 
-Suggested risk labels:
+Draft status, requirement-to-file mapping, full transcripts, screenshots, and exact-head attestations are not default requirements.
 
-- `risk:low`: mechanical change with narrow failure impact.
-- `risk:medium`: ordinary subsystem implementation.
-- `risk:high`: persistence, concurrency, recovery, protocol, security, or architecture-sensitive work.
+## Review
 
-Suggested agent-routing labels:
+A blocking defect is a realistic material problem:
 
-- `agent:small`: mechanical and tightly constrained.
-- `agent:standard`: ordinary implementation with complete interfaces.
-- `agent:strong`: concurrency, persistence, protocol, or cross-boundary work.
+- Missing required behavior.
+- Broken supported workflow.
+- Data loss, corruption, duplication, or recovery failure.
+- Security or authority violation.
+- Incompatible public or serialized contract.
+- Unapproved architecture or dangerous scope expansion.
+- Missing automated coverage for a material affected risk.
 
-## Issue Naming and Ordering
+Cleanup, speculative hardening, unsupported edge cases, and broad parity improvements are follow-ups unless explicitly required.
 
-Implementation issue titles use:
+After fixes, verify the requested fixes and affected areas. Do not restart the entire review without new risk.
 
-```text
-[M<milestone>-<sequence>] Imperative objective
-```
+## Automated validation
 
-Example:
+Agents run all practical command-line validation, including:
 
-```text
-[M0-003] Create standalone executable world server
-```
+- .NET builds and tests.
+- Bash scripts.
+- PowerShell scripts through `powershell.exe` or `pwsh` from WSL when needed.
+- Headless Godot checks.
+- Server, database, networking, persistence, recovery, and compatibility tests.
 
-Every issue lists both `Blocked by` and `Blocks`. Only issues with merged dependencies receive `status:ready`.
+Record short PASS/FAIL summaries. Detailed logs are needed only to explain failures or high-risk results.
 
-Issue numbers do not define architecture order. The milestone sequence and explicit dependencies do.
+## Editor check
 
-## Issue Size
+Human involvement is limited to opening Godot and checking visible or interactive behavior that automation cannot adequately establish.
 
-A normal issue should have:
+The issue or pull request should say only what to open and what to look for. No formal procedure, report, screenshot, video, environment record, commit SHA, or validation comment is required.
 
-- One observable result.
-- One pull request.
-- One primary subsystem.
-- Approximately one to five expected implementation files, excluding tests and generated metadata.
-- Tests in the same pull request.
-- No unresolved architecture decision.
+Merging the pull request is the human signoff that any required editor check was completed and acceptable.
 
-Split work when an issue combines independent concerns such as:
+## Merge
 
-- Schema design and networking.
-- Server behavior and Godot rendering.
-- Terrain math and persistence.
-- Outbox storage and publisher recovery.
-- Multiple gameplay actions.
+Merge when:
 
-## Branch and Pull Request Rules
+- The objective works.
+- Required automated checks pass.
+- No material blocker remains.
+- The merger is satisfied with any required editor check.
+- Architecture changes are intentional and approved.
 
-Branch name:
-
-```text
-issue-<number>-<short-description>
-```
-
-Pull requests must:
-
-- Link one implementation issue with `Closes #<number>`.
-- Open as draft while implementation is incomplete.
-- Use the repository pull-request template.
-- Map requirements to code and evidence.
-- Explain all deviations and files outside the issue's expected-file list.
-- Mark ready only after automated criteria pass.
-
-Use squash merging so each issue becomes one coherent commit on the default branch.
-
-## Implementation Agent Rules
-
-The implementation agent must:
-
-1. Work only from an issue marked ready.
-2. Read every governing specification and ADR named in the issue.
-3. Implement only the required scope.
-4. Add or update required tests.
-5. Preserve client/server authority boundaries.
-6. Record exact validation commands and results.
-7. Stop rather than improvise when a stop condition is met.
-
-The implementation agent must not:
-
-- Introduce a new architecture pattern without an accepted ADR.
-- Add a dependency that the issue does not permit.
-- Weaken an acceptance criterion to make a test pass.
-- Claim human validation.
-- Bundle cleanup or unrelated refactors into the task.
-
-## Review Rules
-
-The reviewer evaluates the pull request against:
-
-1. The linked issue.
-2. Accepted ADRs.
-3. Governing feature specifications.
-4. Repository invariants.
-5. Automated and human evidence requirements.
-
-The reviewer distinguishes:
-
-- **Blocking defect:** correctness, missing requirement, unsafe authority boundary, durability failure, missing required test, incompatible contract, or unapproved scope expansion.
-- **Follow-up improvement:** valuable work not required for safe completion of the issue.
-
-A defective issue specification should be amended or replaced. The reviewer should not silently redesign the subsystem through ad hoc review comments.
-
-## Human Godot Testing
-
-Human engine testing is required for changes affecting:
-
-- Godot startup or project import.
-- Scenes, nodes, resources, meshes, shaders, animation, input, camera, audio, or UI.
-- Client connection and reconnect behavior.
-- Player interaction and visible world state.
-- Client-side application of snapshots or deltas.
-- Export or runtime behavior in supported environments.
-
-Backend-only tasks may state that human engine testing is not required, but the issue and PR must explain why.
-
-Use `docs/development/human-test-report.md`. The report must include the tested commit SHA, Godot version, operating system, configuration, procedure, result, and evidence.
-
-## Merge Rules
-
-A pull request is mergeable only when:
-
-- All required automated checks pass. Before CI exists, the pull request must record successful issue-specific validation.
-- Required review is approved.
-- All blocking comments are resolved.
-- Human validation passes when required.
-- The tested commit matches the proposed head commit.
-- The branch is current enough to merge without invalidating test assumptions.
-
-## Planning Depth
-
-Maintain planning at these levels:
-
-- Current milestone: fully specified executable issues.
-- Next milestone: fully specified before current milestone completion.
-- Later milestones: ordered issue shells or epics, not ready for implementation.
-
-This avoids implementing distant features against interfaces that have not yet been proven by the first end-to-end vertical slice.
+Prefer a working vertical slice and follow-up issues over indefinitely hardening a small change.

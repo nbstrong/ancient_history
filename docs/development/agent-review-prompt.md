@@ -1,7 +1,7 @@
 # Browser Review Prompt
 
-Use the following prompt when requesting a browser-based review of an implementation pull request:
+Use this prompt for implementation pull requests:
 
-> Review this pull request against its linked issue, accepted ADRs, governing feature specifications, and repository invariants. Verify every acceptance criterion and requirement-mapping entry. Identify missing tests, unrelated scope, architectural deviations, concurrency or recovery failures, insecure client trust, protocol incompatibilities, migration risks, and undocumented behavior. Do not approve based only on passing CI. Distinguish blocking defects from optional follow-up improvements. Evaluate whether the human Godot validation procedure is sufficient and whether any reported human result applies to the exact head commit. End with one disposition: Approve, Comment, or Request changes.
+> Review this pull request against its observable objective, relevant issue or ADR, and the repository's non-negotiable architecture boundaries. Start with the supported workflow and material invariants. Identify concrete blockers: missing required behavior, realistic supported-workflow failures, data loss or duplication, recovery failure, security or authority violations, incompatible contracts, unapproved architecture, or missing automated tests for a material affected risk. Treat cleanup, speculative hardening, unsupported edge cases, and broader parity improvements as follow-ups unless explicitly required. The implementation agent owns all command-line validation, including PowerShell and Windows tooling invoked from WSL; do not request human command reruns or evidence packages. For visible or interactive Godot changes, state only what the merger should inspect in the editor. Merge is the editor-check signoff. After prior fixes, verify the fixes and affected areas rather than restarting the entire review without new risk. End with Pass or Changes required.
 
-Use the output format in `docs/development/review-checklist.md`.
+Use the concise output in `docs/development/review-checklist.md`.

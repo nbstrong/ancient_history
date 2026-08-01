@@ -1,27 +1,26 @@
 # Test Evidence Requirements
 
-## Automated Evidence
+Evidence should make automated results understandable without turning a pull request into a transcript archive.
 
-Every implementation pull request records:
+## Agent-owned validation
 
-- Exact validation commands.
-- Exit results.
-- Relevant test names.
-- CI run link when available.
-- Failure-injection or concurrency-test configuration when applicable.
+The implementation agent runs all practical command-line checks, including:
 
-Do not use screenshots of terminal output when copyable text or CI logs are available.
+- .NET builds and tests.
+- Bash tooling.
+- PowerShell scripts through `powershell.exe` or `pwsh` from WSL.
+- Windows executables from WSL when needed.
+- Headless Godot checks.
+- Server, database, networking, persistence, recovery, and compatibility tests.
 
-## Human Evidence
+Record focused commands or checks with concise PASS, FAIL, or genuinely unavailable results.
 
-Engine-affecting pull requests include:
+Include detailed output only when it explains a failure, performance claim, recovery result, or high-risk invariant.
 
-- Tested commit SHA.
-- Godot version and operating system.
-- Exact procedure.
-- Pass or fail result.
-- Screenshots for visible static state.
-- Video for interaction, timing, reconnect, animation, or multi-client behavior.
-- Logs for state revisions, server decisions, and recovery.
+## Editor check
 
-Evidence must demonstrate the issue acceptance criteria rather than only showing that the project launched.
+No human evidence package is required.
+
+When visible or interactive Godot behavior changed, the merger opens the editor and checks that behavior before merging. No screenshot, video, report, environment record, tested SHA, copied output, or validation comment is required.
+
+The merge itself is the signoff.

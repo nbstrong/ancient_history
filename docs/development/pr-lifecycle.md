@@ -2,58 +2,64 @@
 
 ## 1. Start
 
-- Select an issue whose dependencies are merged and whose specification is ready.
-- Create branch `issue-<number>-<short-description>` from the current default branch.
-- Open a draft pull request using the repository template.
-- Link the issue with `Closes #<number>`.
+- Choose an observable objective.
+- Classify the affected risk.
+- Use an issue when dependencies, invariants, milestone ordering, or coordination benefit from one.
+- Create a descriptive branch.
+
+Draft status is optional.
 
 ## 2. Implement
 
-- Limit changes to the issue scope.
-- Add tests in the same pull request.
-- Update documentation required by the issue.
-- Record deviations immediately rather than hiding them in the final diff.
-- Stop when an issue stop condition is met.
+- Keep the change focused on the objective.
+- Make ordinary implementation decisions from repository conventions.
+- Add tests proportional to affected behavior and risk.
+- Stop only for unresolved architecture, incompatible dependencies, public-contract changes, or significant scope expansion.
 
-## 3. Automated Validation
+## 3. Agent validation
 
-- Run all issue-required commands.
-- Run the repository CI-equivalent command when it exists.
-- Record commands and results in the pull request.
-- Do not mark ready while required checks fail or are absent.
+The implementation agent runs every practical non-visual check:
 
-## 4. Browser Review
+- .NET builds and tests.
+- Bash scripts.
+- PowerShell scripts invoked through `powershell.exe` or `pwsh` from WSL.
+- Windows executables invoked from WSL when needed.
+- Headless Godot import/build/runtime checks.
+- Server, database, networking, persistence, recovery, and compatibility tests.
 
-- Mark the pull request ready.
-- Review against the linked issue, accepted ADRs, feature specifications, and repository invariants.
-- Resolve every blocking defect.
-- Re-run affected tests after changes.
+Record concise PASS, FAIL, and genuinely unavailable results. Do not delegate terminal commands to a human.
 
-## 5. Human Engine Validation
+## 4. Review
 
-When required:
+- Review the supported workflow and affected invariants first.
+- Block only on material correctness, durability, compatibility, authority, security, architecture, or required-test failures.
+- Record nonessential hardening as follow-up work.
+- After fixes, verify the fixes and affected areas rather than restarting the entire review without new risk.
 
-- Test the exact pull-request head commit.
-- Use the pinned Godot version and documented environment.
-- Complete `docs/development/human-test-report.md`.
-- File separate defect issues for failures.
-- Retest after any later commit that can affect the tested behavior.
+## 5. Editor check
+
+When visible or interactive Godot behavior changed, the merger opens the editor and inspects the affected behavior.
+
+The pull request should say what to open and what to look for. No report, screenshot, video, copied output, environment record, tested SHA, or validation comment is required.
+
+Merging is the signoff that the editor check passed.
 
 ## 6. Merge
 
-Merge only when:
+Merge when:
 
-- Automated checks pass.
-- Browser review approves.
-- Human validation passes when required.
-- The issue definition of done is complete.
-- The branch remains mergeable.
+- The objective works.
+- Required automated checks pass.
+- No material blocker remains.
+- The merger is satisfied with any required editor check.
+- Architecture changes are approved.
 
-Use squash merge. The squash commit should identify the issue and the observable result.
+Use squash merge by default.
 
 ## 7. Closeout
 
-- Confirm the issue closed automatically.
-- Update the milestone tracking issue.
-- Unblock only the next issues whose dependencies are now complete.
-- Preserve evidence links in the pull request and issue history.
+- Confirm linked issues close when applicable.
+- Unblock dependent work.
+- Create follow-up issues only for improvements worth scheduling.
+
+Do not delay completion to exhaustively harden unsupported edge cases or produce redundant evidence.

@@ -2,89 +2,57 @@
 
 ## Purpose
 
-Implementation issues are executable contracts for delegated agents. They must remove avoidable interpretation while preserving a narrow place for implementation judgment.
+Issues should make implementation easier, not front-load every possible review concern. Use the minimum detail needed for the change's risk level.
 
-## Required Sections
+## Low-risk work
 
-Every implementation issue contains:
+A separate issue is optional for documentation, local tooling, project metadata, scaffolding, mechanical refactors, and test-only fixes.
+
+When an issue is useful, include only:
 
 1. Objective
-2. Background and governing documents
-3. Dependencies
-4. Required changes
-5. Expected files
-6. Required interfaces and data contracts
-7. Implementation constraints
-8. Non-goals
-9. Automated acceptance criteria
-10. Human engine validation
-11. Evidence required
-12. Stop conditions
-13. Definition of done
+2. Relevant context or constraints
+3. Automated acceptance criteria
+4. Editor check, when visible or interactive Godot behavior is affected
 
-Use `.github/ISSUE_TEMPLATE/implementation.yml` to enforce these sections.
+Do not require expected-file lists, exhaustive non-goals, evidence plans, stop conditions, or a custom definition of done unless they prevent a real ambiguity.
 
-## Writing Requirements
+## Medium-risk work
 
-### Objective
+Include the objective, dependencies, relevant constraints, important interfaces, and automated criteria for success and realistic failure paths.
 
-Describe one observable outcome. Avoid broad subsystem names.
+## High-risk work
 
-Good:
+For migrations, transactions, concurrency, recovery, idempotency, economy integrity, security, protocol compatibility, authoritative state, or irreversible architecture, also define applicable invariants, failure semantics, recovery behavior, compatibility expectations, resource limits, and ADR decisions.
 
-> Add an executable world-server host that reports readiness and shuts down gracefully.
+## Validation ownership
 
-Bad:
+All command-line acceptance criteria belong to the implementation agent. This includes Bash, .NET, PowerShell, Windows executables, and headless Godot checks.
 
-> Implement the backend.
+WSL is a supported agent environment. When Windows-specific checks are needed, write them as automated criteria and expect the agent to invoke `powershell.exe`, `pwsh`, or the relevant Windows executable from WSL.
 
-### Required Changes
+Do not assign terminal commands to a human.
 
-Specify exact behavior and boundaries. Name files, public types, commands, serialized fields, schema constraints, scene nodes, and error behavior when those details are known.
+## Observe before specifying
 
-Do not ask the implementation agent to choose among unresolved architectures. Record the choice in an ADR first.
+Inspect real supported tools and interfaces before writing exact parsers, output formats, command behavior, or platform assumptions. If observed behavior differs from the issue, correct the issue once and continue from the observed contract.
 
-### Automated Acceptance Criteria
+## Automated acceptance criteria
 
-Each criterion must produce a pass or fail result. Prefer named tests and commands.
+Use a small set of observable checks covering success and realistic material failures. Avoid matrices that exist only to exercise unsupported or remote edge cases.
 
-Good:
+## Editor check
 
-- `SameKeyDifferentHash_ReturnsConflictWithoutCallingDomainMutation`
-- `dotnet build -warnaserror` exits successfully.
+Require an editor check only for affected visible or interactive behavior that automation cannot adequately establish.
 
-Bad:
+State only what the merger should open and what to look for. Do not request screenshots, video, reports, environment details, tested SHAs, copied command output, or a separate validation comment.
 
-- Code is robust.
-- Networking works well.
+Merging the pull request means the editor check was accepted.
 
-### Human Validation
+## Stop conditions
 
-Provide exact prerequisites, actions, observations, and regression checks. Visual or interactive acceptance criteria must not be replaced by a general request to "test in Godot."
+Use stop conditions only for material uncertainty: conflicting architecture, a new runtime dependency, an unexpected public-contract change, or significant scope expansion.
 
-### Stop Conditions
+## Sizing
 
-Lower-capability agents must stop when:
-
-- An accepted ADR conflicts with the issue.
-- A dependency is missing or has a different interface.
-- A new dependency or architecture decision appears necessary.
-- Required behavior cannot be implemented without expanding scope.
-- A test requirement appears impossible or internally inconsistent.
-
-## Issue Sizing
-
-Split an issue when it includes more than one independently reviewable result, crosses unrelated subsystems, or requires separate human validation procedures.
-
-The expected default is one issue, one branch, one pull request, and one squash commit.
-
-## Ready Review
-
-Before applying `status:ready`, a reviewer confirms:
-
-- Dependencies are merged.
-- Governing documents exist on the default branch.
-- Interfaces are exact enough to implement.
-- Tests cover success and relevant failure behavior.
-- Human validation is actionable.
-- No architecture decision remains open.
+Prefer one observable result per pull request. Split work when concerns are independently useful, separately risky, or require unrelated implementation—not merely because several files or layers are touched.
