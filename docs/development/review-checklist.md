@@ -1,39 +1,29 @@
 # Pull Request Review Checklist
 
-## Review Goal
+## Review goal
 
-Determine whether the change safely achieves its observable objective. Review the risks the change actually affects; do not apply every repository concern to every pull request.
+Determine whether the change safely achieves its observable objective. Review only the risks the change actually affects.
 
-## 1. Objective and Scope
+## Objective and scope
 
 - [ ] The observable result is clear.
 - [ ] The implementation achieves it in the supported workflow.
 - [ ] Scope changes or new dependencies are intentional and acceptable.
 - [ ] No unrelated work creates material review risk.
 
-A requirement-to-file mapping is optional. Review behavior, not paperwork completeness.
+A requirement-to-file mapping is optional. Review behavior, not paperwork.
 
-## 2. Risk Classification
-
-Confirm the stated level:
-
-- **Low:** docs, tooling, metadata, scaffolding, mechanical refactor, test-only.
-- **Medium:** ordinary feature or subsystem change.
-- **High:** persistence, transactionality, concurrency, recovery, idempotency, economy, security, protocol compatibility, authority, or architecture.
-
-Apply the remaining checks only where relevant.
-
-## 3. Material Correctness
+## Material correctness
 
 - [ ] Supported success behavior works.
 - [ ] Realistic failure behavior is safe and understandable.
 - [ ] Public or serialized contracts remain compatible, or the change is explicit.
 - [ ] Client input is not trusted as authoritative shared state.
-- [ ] Tests are meaningful for the affected behavior.
+- [ ] Automated tests are meaningful for the affected behavior.
 
-## 4. High-Risk Checks
+## High-risk checks
 
-When applicable:
+Only when applicable:
 
 - [ ] Transactions and migrations preserve durable state.
 - [ ] Retry and idempotency behavior cannot duplicate effects.
@@ -43,23 +33,23 @@ When applicable:
 - [ ] Security boundaries and resource limits are enforced.
 - [ ] High-cost or irreversible architecture changes have an ADR.
 
-Do not demand these sections for unrelated low-risk work.
+## Validation ownership
 
-## 5. Godot and Human Validation
+The implementation agent owns all command-line validation, including Bash, .NET, PowerShell and Windows tools invoked from WSL, and headless Godot checks.
 
-When affected behavior is visual, interactive, import/export, graphics, input, audio, connection, or runtime behavior:
+Do not request that a human rerun terminal commands or provide copied output, screenshots, environment records, or tested-SHA attestations.
 
-- [ ] The focused human procedure covers that behavior.
-- [ ] The supported environment and result are recorded.
-- [ ] Screenshot or video is present only when it proves the acceptance criterion.
+## Editor check
 
-A later commit requires retesting only when it can affect the tested behavior.
+When visible or interactive Godot behavior changed, the pull request should say what the merger needs to inspect in the editor.
 
-## 6. Classification of Findings
+No evidence is required. The reviewer only confirms that the requested editor check is focused and understandable. Merging means the check was accepted.
+
+## Findings
 
 ### Blocking defect
 
-A concrete material problem: missing objective, broken supported workflow, unsafe state mutation, data loss/corruption/duplication, recovery failure, security/authority violation, incompatible contract, unapproved architecture, or a missing test for a required material risk.
+A concrete material problem: missing objective, broken supported workflow, unsafe state mutation, data loss/corruption/duplication, recovery failure, security/authority violation, incompatible contract, unapproved architecture, or missing automated coverage for a material affected risk.
 
 ### Follow-up improvement
 
@@ -67,7 +57,7 @@ Hardening, cleanup, broader edge cases, unsupported-platform parity, style prefe
 
 Do not convert follow-ups into blockers merely because they are technically possible.
 
-## 7. Review Behavior
+## Review behavior
 
 - Find material blockers first.
 - Prefer reproduced or realistic failures over speculative edge cases.
@@ -75,7 +65,7 @@ Do not convert follow-ups into blockers merely because they are technically poss
 - Stop expanding test matrices once supported behavior and stated invariants are adequately proven.
 - When the issue specification is wrong, amend it once using observed evidence.
 
-## Review Output
+## Review output
 
 ```markdown
 ## Result
@@ -86,9 +76,13 @@ Pass / Changes required
 
 None, or numbered concrete failures.
 
-## Validation assessment
+## Automated validation assessment
 
 What is proven and what remains.
+
+## Editor check
+
+Not needed, or what the merger should inspect.
 
 ## Follow-ups
 
