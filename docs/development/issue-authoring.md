@@ -4,7 +4,7 @@
 
 Issues should make implementation easier, not front-load every possible review concern. Use the minimum detail needed for the change's risk level.
 
-## Low-Risk Work
+## Low-risk work
 
 A separate issue is optional for documentation, local tooling, project metadata, scaffolding, mechanical refactors, and test-only fixes.
 
@@ -12,68 +12,47 @@ When an issue is useful, include only:
 
 1. Objective
 2. Relevant context or constraints
-3. Acceptance criteria
-4. Human validation, when applicable
+3. Automated acceptance criteria
+4. Editor check, when visible or interactive Godot behavior is affected
 
 Do not require expected-file lists, exhaustive non-goals, evidence plans, stop conditions, or a custom definition of done unless they prevent a real ambiguity.
 
-## Medium-Risk Work
+## Medium-risk work
 
-Include:
+Include the objective, dependencies, relevant constraints, important interfaces, and automated criteria for success and realistic failure paths.
 
-1. Objective
-2. Dependencies
-3. Relevant governing documents
-4. Required behavior and important interfaces
-5. Acceptance criteria for success and realistic failure paths
-6. Human validation when automated checks are insufficient
+## High-risk work
 
-Leave implementation details to the agent unless they are compatibility, architecture, or safety constraints.
+For migrations, transactions, concurrency, recovery, idempotency, economy integrity, security, protocol compatibility, authoritative state, or irreversible architecture, also define applicable invariants, failure semantics, recovery behavior, compatibility expectations, resource limits, and ADR decisions.
 
-## High-Risk Work
+## Validation ownership
 
-For migrations, transactions, concurrency, recovery, idempotency, economy integrity, security, protocol compatibility, authoritative state, or irreversible architecture, also define the applicable:
+All command-line acceptance criteria belong to the implementation agent. This includes Bash, .NET, PowerShell, Windows executables, and headless Godot checks.
 
-- Invariants
-- Failure and retry semantics
-- Recovery behavior
-- Compatibility expectations
-- Resource limits
-- ADR decisions
+WSL is a supported agent environment. When Windows-specific checks are needed, write them as automated criteria and expect the agent to invoke `powershell.exe`, `pwsh`, or the relevant Windows executable from WSL.
 
-Only high-risk concerns need adversarial or failure-injection acceptance criteria by default.
+Do not assign terminal commands to a human.
 
-## Observe Before Specifying
+## Observe before specifying
 
-Inspect real supported tools and interfaces before writing exact parsers, output formats, command behavior, or platform assumptions when practical. If observed behavior differs from the issue, correct the issue once and continue from the observed contract.
+Inspect real supported tools and interfaces before writing exact parsers, output formats, command behavior, or platform assumptions. If observed behavior differs from the issue, correct the issue once and continue from the observed contract.
 
-## Acceptance Criteria
+## Automated acceptance criteria
 
-Each criterion should prove an observable result. Prefer a small set of meaningful checks over exhaustive matrices.
+Use a small set of observable checks covering success and realistic material failures. Avoid matrices that exist only to exercise unsupported or remote edge cases.
 
-Good:
+## Editor check
 
-- `dotnet build` succeeds.
-- The supported Godot editor completes a headless import/build.
-- Retrying a committed command does not duplicate state.
+Require an editor check only for affected visible or interactive behavior that automation cannot adequately establish.
 
-Avoid criteria that exist only to exercise remote or unsupported edge cases.
+State only what the merger should open and what to look for. Do not request screenshots, video, reports, environment details, tested SHAs, copied command output, or a separate validation comment.
 
-## Human Validation
+Merging the pull request means the editor check was accepted.
 
-Require human testing only for affected behavior that automated checks do not adequately prove. State the action and expected observation. Request screenshots or video only when they are the clearest evidence of a visual or interactive result.
+## Stop conditions
 
-## Stop Conditions
-
-Use stop conditions only for material uncertainty, such as:
-
-- A governing ADR conflicts with the work.
-- A new architecture or runtime dependency is required.
-- A public contract must change unexpectedly.
-- The task cannot meet its objective without significant scope expansion.
-
-Agents should resolve minor unspecified implementation details through repository conventions rather than stopping.
+Use stop conditions only for material uncertainty: conflicting architecture, a new runtime dependency, an unexpected public-contract change, or significant scope expansion.
 
 ## Sizing
 
-Prefer one observable result per pull request. Split work when concerns are independently useful, separately risky, or require unrelated validation—not merely because several files or layers are touched.
+Prefer one observable result per pull request. Split work when concerns are independently useful, separately risky, or require unrelated implementation—not merely because several files or layers are touched.
